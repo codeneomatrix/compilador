@@ -346,6 +346,25 @@ class CalcLex < Rly::Lex
   		t
   end 
 #-----------------------------------------------------
+  token :PUNTOYCOMA, /;/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :DOSPUNTOS, /:/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :COMA, /,/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+#-----------------------------------------------------
    token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
   		t.type = "COMENTARIO"
     	t.value = t.value  	
@@ -358,11 +377,17 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
+  token :IDENTIFICADOR, /\w(\w|_)*|_(\w|_)*/ do |t|
+  		t.type = "IDENTIFICADOR"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
 
 #------------------------------------------------------
 
   on_error do |t|
-    puts "Illegal character #{t.value}"
+    puts "CARACTER ILEGAL #{t.value}"
     t.lexer.pos += 1
     nil
   end
