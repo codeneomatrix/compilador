@@ -23,14 +23,14 @@ procedure CargarInfo (var lista: listaProfes);
 		profe: profesor;
 		archi: archiProfes;
 	begin
-		Assign(archi, “profes.dat”);
+		Assign(archi, 'profes.dat');
 		Reset(archi); 
-		Sintaxis y Semántica del Lenguaje 
+		{Sintaxis y Semantica del Lenguaje }
 		lista = nil;
 		while not eof(archi)
 		do begin
 		read(archi, profe)
-		InsertarOrdenado(lista, profe) /*el que ya hicieron*/
+		InsertarOrdenado(lista, profe) {el que ya hicieron}
 	end;
 Close( archi);
 end;
@@ -40,14 +40,14 @@ profe: Cadena;
 nro: integer;
 cur: curso;
 begin
-writeln(“ Ingrese el nombre del profesor a modificar (ZZ para finalizar)”);
+writeln(' Ingrese el nombre del profesor a modificar (ZZ para finalizar)');
 read(profe);
-while profe <> “ZZ”
+while profe <> 'ZZ'
 do begin
-writeln(“ Ingrese el nro del curso, título, hora inicial y hora final”);
-read ( nro, cur.título, cur.horaI, cur.horaF);
+writeln(' Ingrese el nro del curso, titulo, hora inicial y hora final');
+read ( nro, cur.titulo, cur.horaI, cur.horaF);
 AnalizarCambio(lista, profe, nro, cur);
-writeln(“ Ingrese el nombre del profesor a modificar (ZZ para finalizar)”);
+writeln(' Ingrese el nombre del profesor a modificar (ZZ para finalizar)');
 read(profe)
 end;
 end;
@@ -56,27 +56,25 @@ nuevoCurso:curso);
 var
 regProfe: profesor
 begin
-if Buscar(lista, profe) /* busca por el nombre*/
+if Buscar(lista, profe) { busca por el nombre}
 then begin
-regProfe =Recuperar(lista, profe); /* recupera por el nombre*/
-if not SuperposiciónHoraria (nuevoCurso, regProfe.cursos, n)
+regProfe := Recuperar(lista, profe); { recupera por el nombre}
+if not SuperposicionHoraria (nuevoCurso, regProfe.cursos, n)
 then begin
-regProfe.cursos[n] = nuevoCurso
+regProfe.cursos[n] := nuevoCurso
 InsertarOrdenado(lista, regProfe)
 end;
-else writeln(“ No se puede hacer el cambio por superposición 
-horaria”);
+else writeln(' No se puede hacer el cambio por superposicion horaria');
 end
-else writeln(“ El profesorno está registrado”);
+else writeln(' El profesor no esta registrado');
 end;
-function SuperposiciónHoraria (nuevo: curso, cursos : trescursos; n: integer): boolean; 
-Sintaxis y Semántica del Lenguaje 
+function SuperposicionHoraria (nuevo: curso, cursos : trescursos; n: integer): boolean; 
+{Sintaxis y Semantica del Lenguaje }
 begin
-{Se deberá testear que el horario del curso n no se superponga con los otros dos. }
-..............
+{Se debera testear que el horario del curso n no se superponga con los otros dos. }
 end;
-begin /* del programa ppal */
+begin { del programa ppal }
 CargarInfo(lista);
 ActualizarInfo(lista);
 GrabarInfo(lista)
-end.
+end

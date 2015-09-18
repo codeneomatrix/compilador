@@ -2,7 +2,14 @@ require "rly"
 class CalcLex < Rly::Lex
   ignore " \t\n"
 
- 
+#-----------------------------------------------------
+  token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
+  		t.type = "COMENTARIO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+
 #--------------------------------------------
   token :MAS, /\+/ do |t|
   		t.type = "SIGNO"
@@ -88,7 +95,7 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :END, /end.|END.|end|END/ do |t|
+  token :END, /end|END/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -331,12 +338,18 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
-  token :WHILE, / while | WHILE / do |t|
+  token :WHILE, /while |WHILE / do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end 
+  token :FUNCTION, /function|FUNCTION/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
 #-----------------TIPOS------------------------------------
 #----------------------------------------------------------
   token :INTEGER, /integer|INTEGER/ do |t|
@@ -345,6 +358,14 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
+  token :BOOLEAN, /boolean|BOOLEAN/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+
+  
 #-----------------------------------------------------
   token :PUNTOYCOMA, /;/ do |t|
   		t.type = "SIMBOLO TERMINAL"
@@ -364,13 +385,37 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
-#-----------------------------------------------------
-   token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
-  		t.type = "COMENTARIO"
+  token :PARENTESISA, /\(/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end 
+  token :PARENTESISC, /\)/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :CORCHETEA, /\[/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :CORCHETEC, /\]/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :PUNTO, /\./ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+#-------------------------------------------------------
   token :CADENA, /'.+'/ do |t|
   		t.type = "CADENA DE TEXTO"
     	t.value = t.value  	
@@ -401,7 +446,7 @@ lex = CalcLex.new(cadena)
 while true
 	tok = lex.next
 	if tok != nil 
-		puts("#{tok.type} #{tok.value}")
+		puts "		#{tok.type} #{tok.value}"
 		#puts(tok.type 
 		#puts(tok.value)
 	end
@@ -427,8 +472,9 @@ url = gets.chomp
 # automáticamente al acabar el bloque.
 File.open(url, 'r') do |f1|
   while linea = f1.gets
-    puts linea
+  	puts "--> #{linea}"
     analizador(linea)
+    puts "\n"
   end
 end
 
