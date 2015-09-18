@@ -2,6 +2,8 @@ require "rly"
 class CalcLex < Rly::Lex
   ignore " \t\n"
 
+ 
+#--------------------------------------------
   token :MAS, /\+/ do |t|
   		t.type = "SIGNO"
     	t.value = t.value
@@ -20,7 +22,7 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :DIV, /\// do |t|
+  token :DIV, /\/|DIV|div/ do |t|
   		t.type = "SIGNO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -28,6 +30,12 @@ class CalcLex < Rly::Lex
   end
   
   token :ASIGNACION, /:=/ do |t|
+  		t.type = "ASIGNACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :MOD, /mod|MOD/ do |t|
   		t.type = "ASIGNACION"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -44,25 +52,314 @@ class CalcLex < Rly::Lex
     t
   end
 
+#-----------------------------------------------
+#------------------PALABRAS RESERVADAS----------
+#-----------------------------------------------
 
-  token :WRITELN, /writeln/ do |t|
+
+
+  token :WRITELN, /writeln|WRITELN/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :ELSE, /else/ do |t|
+  token :WRITE, /write|WRITE/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :END, /end/ do |t|
+  token :READLN, /readln|READLN/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
+  token :READ, /read|READ/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :ELSE, /else|ELSE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :END, /end.|END.|end|END/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+
+  token :ABSOLUTE, /absolute|ABSOLUTE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :ARRAY, /array|ARRAY/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :BEGIN, /begin|BEGIN/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :CONST, /const |CONST / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :FOR, /for |FOR / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :DOWNTO, / downto | DOWNTO / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :TO, / to | TO / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :CASE, /case |CASE / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :IF, /if |IF / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :IN, / in | IN / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :LABEL, /label|LABEL/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  #----------conjunciones logicas-------
+  token :AND, /and|AND/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :OR, /or|OR/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :NOT, /not|NOT/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :XOR, /xor|XOR/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  #-------------------------------------
+  token :PROGRAM, /program|PROGRAM/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :REPEAT, /repeat|REPEAT/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :UNIT, /unit|UNIT/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :USES, /uses|USES/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :WITH, /with|WITH/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :CONSTRUCTOR, /constructor|CONSTRUCTOR/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :EXTERNAL, /external|EXTERNAL/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :DO, / do | DO / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :FILE, /file|FILE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :FORWARD, /forward|FORWARD/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :GOTO, /goto|GOTO/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :IMPLEMENTATION, /implementation|IMPLEMENTATION/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :INLINE, /inline|INLINE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :INTERRUPT, /interrupt|INTERRUPT/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :OF, /of|OF/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :PACKED, /packed|PACKED/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :PROCEDURE, /procedure|PROCEDURE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :RECORD, /record|RECORD/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :SET, /set|SET/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :SHR, /shr|SHR/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :THEN, /then|THEN/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :TYPE, /type|TYPE/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end  
+  token :UNTIL, /until|UNTIL/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end    
+  token :VAR, /var|VAR/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :WHILE, / while | WHILE / do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+#-----------------TIPOS------------------------------------
+#----------------------------------------------------------
+  token :INTEGER, /integer|INTEGER/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+#-----------------------------------------------------
+   token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
+  		t.type = "COMENTARIO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :CADENA, /'.+'/ do |t|
+  		t.type = "CADENA DE TEXTO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+
+#------------------------------------------------------
 
   on_error do |t|
     puts "Illegal character #{t.value}"
