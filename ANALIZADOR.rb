@@ -49,12 +49,16 @@ class CalcLex < Rly::Lex
   		t
   end
 
-  
-
-  
-  token :NUMBER, /\d+/ do |t|
+  token :NUMBERFLOAT, /\d+\.\d+/ do |t|
   	#puts("NUMERO #{t.value}")
-  	t.type = "NUMERO"
+  	t.type = "NUMERO FLOTANTE"
+    t.value = t.value
+    t
+  end
+
+  token :NUMBERINT, /\d+/ do |t|
+  	#puts("NUMERO #{t.value}")
+  	t.type = "NUMERO ENTERO"
     t.value = t.value.to_i
     t
   end
@@ -65,7 +69,7 @@ class CalcLex < Rly::Lex
 
 
 
-  token :WRITELN, /writeln|WRITELN/ do |t|
+  token :WRITELN, /writeln|writeLn|WRITELN/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -77,13 +81,19 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :READLN, /readln|READLN/ do |t|
+  token :READLN, /readln|readLn|READLN/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
   token :READ, /read|READ/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :CLOSE, /close|CLOSE/ do |t|
   		t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -170,25 +180,25 @@ class CalcLex < Rly::Lex
   end
   #----------conjunciones logicas-------
   token :AND, /and|AND/ do |t|
-  		t.type = "PALABRA RESERVADA"
+  		t.type = "OPERADOR LOGICO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
   token :OR, /or|OR/ do |t|
-  		t.type = "PALABRA RESERVADA"
+  		t.type = "OPERADOR LOGICO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
   token :NOT, /not|NOT/ do |t|
-  		t.type = "PALABRA RESERVADA"
+  		t.type = "OPERADOR LOGICO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
   token :XOR, /xor|XOR/ do |t|
-  		t.type = "PALABRA RESERVADA"
+  		t.type = "OPERADOR LOGICO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
@@ -350,9 +360,57 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
+  token :NEW, /new|NEW/ do |t|
+  		t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
 #-----------------TIPOS------------------------------------
 #----------------------------------------------------------
   token :INTEGER, /integer|INTEGER/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :BYTE, /byte|BYTE/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :SHORTINT, /shortint|SHORTINT/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :WORD, /word|WORD/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :LONGINT, /longint|LONGINT/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :REAL, /real|REAL/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :CHAR, /char|CHAR/ do |t|
+  		t.type = "INDICADOR DE TIPO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :STRING, /string|STRING/ do |t|
   		t.type = "INDICADOR DE TIPO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -364,9 +422,34 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
+  token :TEXT, /Text|text/ do |t|
+  		t.type = "TIPO DE ARCHIVO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
 
+#------------------------------------------------------
+  token :TRUE, /true|TRUE/ do |t|
+  		t.type = "BOOLEANO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :FALSE, /false|FALSE/ do |t|
+  		t.type = "BOOLEANO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
   
 #-----------------------------------------------------
+  token :PUNTERO, /\^/ do |t|
+  		t.type = "SIMBOLO TERMINAL"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
   token :PUNTOYCOMA, /;/ do |t|
   		t.type = "SIMBOLO TERMINAL"
     	t.value = t.value  	
@@ -415,6 +498,48 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end 
+
+ #-----------------OPERACION DE RELACION------------------------------------
+#----------------------------------------------------------
+  token :DESIGUAL, /¬=|<>/ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :MAYOROIGUALQUE, />=/ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :MENOROIGUALQUE, /<=/ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :MENORQUE, /</ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :MAYORQUE, />/ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  token :IGUAL, /=/ do |t|
+  		t.type = "OPERADOR DE RELACION"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
+  
+
+#-----------------------------------------------------
 #-------------------------------------------------------
   token :CADENA, /'.+'/ do |t|
   		t.type = "CADENA DE TEXTO"
@@ -432,13 +557,16 @@ class CalcLex < Rly::Lex
 #------------------------------------------------------
 
   on_error do |t|
-    puts "CARACTER ILEGAL #{t.value}"
+    puts "		\033[1;31mCARACTER ILEGAL #{t.value}\033[1;36m"
     t.lexer.pos += 1
     nil
   end
 end
 
-
+#------------------------------------------------------
+#------------------------------------------------------
+#------------------------------------------------------
+#------------------------------------------------------
 
 def analizador(cadena)
 lex = CalcLex.new(cadena)
@@ -459,6 +587,17 @@ end
 
 
 
+puts "\t***********************************************************************************"
+puts "\t***************************Compilador de lenguaje pascal***************************"
+puts "\t***********************************************************************************"
+puts "\t*************************************ALUMNOS:**************************************"
+puts "\t******ACEVEDO MALDONADO JOSUE             		                     ******"
+puts "\t******MORALES MARTINEZ MARIA                				     ******"
+puts "\t******OLIVERA LUIS             		                                     ******"
+puts "\t******PEREZ CARRERA CARLOS             		                             ******"
+puts "\t******RUIZ GONZALES ALEXANDER             		                     ******"
+puts "\t******						                             ******"
+puts "\t***********************************************************************************"
 
 puts "Url del archivo .pas:"  
 STDOUT.flush  
@@ -472,12 +611,12 @@ url = gets.chomp
 # automáticamente al acabar el bloque.
 File.open(url, 'r') do |f1|
   while linea = f1.gets
-  	puts "--> #{linea}"
+  	puts "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
     analizador(linea)
     puts "\n"
   end
 end
-
+puts "\033[1;37m"
 
 
  

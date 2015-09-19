@@ -11,7 +11,7 @@ profesor = record
 	cursos: trescursos;
 end;
 archiProfes = file of profesor;
-listaProfes = ^ nodoProfe;
+listaProfes = nodoProfe;
 nodoProfe = record
 	dato: profesor;
 	psig: listaProfes;
@@ -77,4 +77,70 @@ begin { del programa ppal }
 CargarInfo(lista);
 ActualizarInfo(lista);
 GrabarInfo(lista)
-end
+end$
+p^:= 7
+new(p);
+ptr=^integer;
+var
+p,q:ptr;
+
+function Posicion( nom: cadena; var archi: ArchivoAlumnos) : integer;
+var reg: Alumno;
+esta: boolean;
+begin
+esta:= false;
+seek(archi, 0);
+while not wof(archi) and not esta
+do begin
+Read(archi, alu)
+esta:= alu.nombre = nom;
+
+procedure Modificar(var archi: ArchivoAlumnos);
+var alu: Alumno;
+nom: Cadena;
+begin
+Reset(archi);
+WriteLn('Introduzca el nombre del alumno a modificar';
+ReadLn(nom);
+i := Posicion (nom, archi);
+if i= -1 
+then writeln('El alumno buscado NO se esta en el archivo')
+else begin
+seek(archi, i);
+read(archi, alu);
+MostrarDatosAlumno(alu);
+writeln ('Introduzca los nuevos datos:');
+LeerRegistro(alu);
+i := filePos(archi) -1;
+write(archi, alu);
+writeLn ('Losdatos se han modificado.');
+end;
+end;
+
+
+
+program copioArchivo;
+var
+archiE, archiS: Text;
+linea: string[80];
+begin
+assign(archiE, 'c: \sintaxis\entrada.txt');
+assign(archiS, 'c: \sintaxis\salida.txt');
+reset(archiE);
+rewrite(archiS);
+while not eof(archiE)
+do begin
+readLn(archiE,linea);
+writeLn(archiS,linea);
+end;
+close(archiE);
+close(archiS);
+end.
+
+
+with a1 do
+begin
+nombre := 'Carlos Fernandez';
+legajo := 12345;
+prom := 4.50;
+end;
