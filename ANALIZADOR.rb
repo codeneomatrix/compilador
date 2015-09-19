@@ -593,7 +593,13 @@ end
 
 end
 
-
+def vertabla(tabla)
+	puts "               TABLA DE SIMBOLOS"
+	puts "|         NOMBRE\033[100D \033[20C|         TIPO        |"
+	tabla.each do |k, v|
+	  puts "   #{k} \033[100D \033[20C|  #{v}"
+	end
+end
 
 puts "\t***********************************************************************************"
 puts "\t***************************Compilador de lenguaje pascal***************************"
@@ -625,16 +631,11 @@ File.open(url, 'r') do |f1|
   while linea = f1.gets
   	puts "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
     analizador(linea, tabla)
-    puts "\n"
+    puts "\n\033[1;37m"
+    vertabla(tabla)
+    puts "\033[1;36m"
   end
 end
 puts "\033[1;37m"
 
 
-
-puts "TABLA DE SIMBOLOS"
-puts "|         NOMBRE\033[100D \033[60C|         TIPO        |"
-tabla.each do |k, v|
-  puts "   #{k} \033[100D \033[60C|  #{v}"
-end
- 
