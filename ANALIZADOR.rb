@@ -568,15 +568,23 @@ end
 #------------------------------------------------------
 #------------------------------------------------------
 
-def analizador(cadena)
+def tablasimbolos(clave,valor)
+	tabla[clave]  = valor
+end
+
+
+def analizador(cadena, tabla)
 lex = CalcLex.new(cadena)
 
 while true
 	tok = lex.next
 	if tok != nil 
 		puts "		#{tok.type} #{tok.value}"
-		#puts(tok.type 
+		#puts(tok.type) 
 		#puts(tok.value)
+		if tok.type=="IDENTIFICADOR"
+		tabla[tok.value]=tok.type
+	    end
 	end
 	if not tok
 		break
@@ -599,6 +607,10 @@ puts "\t******RUIZ GONZALES ALEXANDER             		                     ******"
 puts "\t******						                             ******"
 puts "\t***********************************************************************************"
 
+tabla= {}
+
+
+
 puts "Url del archivo .pas:"  
 STDOUT.flush  
 url = gets.chomp  
@@ -612,11 +624,17 @@ url = gets.chomp
 File.open(url, 'r') do |f1|
   while linea = f1.gets
   	puts "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
-    analizador(linea)
+    analizador(linea, tabla)
     puts "\n"
   end
 end
 puts "\033[1;37m"
 
 
+
+puts "TABLA DE SIMBOLOS"
+puts "|         NOMBRE\033[100D \033[60C|         TIPO        |"
+tabla.each do |k, v|
+  puts "   #{k} \033[100D \033[60C|  #{v}"
+end
  
