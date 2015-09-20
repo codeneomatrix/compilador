@@ -469,7 +469,7 @@ class CalcLex < Rly::Lex
   		t
   end 
   token :PARENTESISA, /\(/ do |t|
-  		t.type = "SIMBOLO TERMINAL"
+  		t.type = "DELIMITADOR"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
