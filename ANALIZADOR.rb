@@ -2,6 +2,12 @@ require "rly"
 class CalcLex < Rly::Lex
   ignore " \t\n"
 
+ token :CADENA, /'\w(\w|\s|-|!|@|#|$|%|&)*'/ do |t|
+  		#t.type = "CADENA DE TEXTO"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end 
 #-----------------------------------------------------
   token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
   		#t.type = "COMENTARIO"
@@ -69,43 +75,19 @@ class CalcLex < Rly::Lex
 
 
 
-  token :WRITELN, /writeln|writeLn|WRITELN/ do |t|
+  token :WRITE, /writeln|writeLn|WRITELN|write|WRITE/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :WRITE, /write|WRITE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :READLN, /readln|readLn|READLN/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :READ, /read|READ/ do |t|
+  token :READ, /readln|readLn|READLN|read|READ/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
   end
   token :CLOSE, /close|CLOSE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :ELSE, /else|ELSE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :END, /end|END/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -124,6 +106,7 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
+
   token :BEGIN, /begin|BEGIN/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
@@ -173,6 +156,18 @@ class CalcLex < Rly::Lex
   		t
   end
   token :LABEL, /label|LABEL/ do |t|
+  		#t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :ELSE, /else|ELSE/ do |t|
+  		#t.type = "PALABRA RESERVADA"
+    	t.value = t.value  	
+  		#puts("SIGNO #{t.value}")
+  		t
+  end
+  token :END, /end|END/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -368,61 +363,7 @@ class CalcLex < Rly::Lex
   end
 #-----------------TIPOS------------------------------------
 #----------------------------------------------------------
-  token :INTEGER, /integer|INTEGER/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :BYTE, /byte|BYTE/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :SHORTINT, /shortint|SHORTINT/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :WORD, /word|WORD/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :LONGINT, /longint|LONGINT/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :REAL, /real|REAL/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CHAR, /char|CHAR/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :STRING, /string|STRING/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :BOOLEAN, /boolean|BOOLEAN/ do |t|
-  		#t.type = "INDICADOR DE TIPO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :TEXT, /Text|text/ do |t|
+  token :INDICADORDETIPO, /integer|INTEGER|byte|BYTE|shortint|SHORTINT|word|WORD|longint|LONGINT|real|REAL|char|CHAR|string|STRING|boolean|BOOLEAN|Text|text/ do |t|
   		#t.type = "TIPO DE ARCHIVO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -541,12 +482,7 @@ class CalcLex < Rly::Lex
 
 #-----------------------------------------------------
 #-------------------------------------------------------
-  token :CADENA, /'.+'/ do |t|
-  		#t.type = "CADENA DE TEXTO"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
+ 
   token :IDENTIFICADOR, /\w(\w|_)*|_(\w|_)*/ do |t|
   		#t.type = "IDENTIFICADOR"
     	t.value = t.value  	
@@ -574,18 +510,127 @@ class CalcParse < Rly::Yacc
 	precedence :left,  '+', '-'
 	precedence :left,  '*', '/'
 
-  rule 'statement : expression' do |st, e|
-    st.value = e.value
+  rule 'statement : programa' do |st, pro|
+    st.value = pro.value
   end
 
-  rule 'expression : expression MAS expression
-                   | expression "-" expression
-                   | expression "*" expression
-                   | expression "/" expression' do |ex, e1, op, e2|
+  rule 'programa : encabezado bloque PUNTO' do |pro, enca, blo|
+    pro.value = blo.value
+  end
+
+  rule 'encabezado :PROGRAM IDENTIFICADOR PARENTESISA listaident PARENTESISC PUNTOYCOMA
+  				   |PROGRAM IDENTIFICADOR PUNTOYCOMA' do |enca,identifi,listaiden|
+  	puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{identifi.value}"
+    enca.value = listaiden.value
+  end
+
+  rule 'bloque : declaraciones enunciados' do |blo, decla, enun|
+    blo.value = enun.value
+  end
+
+  
+ rule 'declaraciones: VAR declaravariables PUNTOYCOMA declaraciones
+ 				     | PROCEDURE declaraprocemientos declaraciones
+ 					 | declaraetiqueta declaraciones
+ 					 | declaraetiqueta
+     				 | declaraconstantes declaraciones
+     				 | declaraconstantes
+     				 | TYPE declaratipos declaraciones
+     				 | TYPE declaratipos
+     				 | VAR declaravariables PUNTOYCOMA
+     				 | FUNCTION declarafunciones declaraciones
+     				 | FUNCTION declarafunciones
+     				 | PROCEDURE declaraprocemientos' do |decla, declar,puntoyc|
+     decla.value = declar.value
+   end
+
+   rule 'declaravariables : identificadorv DOSPUNTOS INDICADORDETIPO' do |decla, inde|
+     decla.value = inde.value
+   end
+   rule 'identificadorv : IDENTIFICADOR
+   						  | identificadorv COMA identificadorv ' do |decla, inde|
+     decla.value = inde.value
+   end
+
+   rule 'declaraetiqueta : IDENTIFICADOR ' do |decla,iden|
+     decla.value = iden.value
+   end
+   rule 'declaratipos :IDENTIFICADOR ' do |decla,ident|
+     blo.value = ident.value
+   end
+   rule 'declaraconstantes :CONST IDENTIFICADOR ' do |decla,ident|
+     blo.value = ident.value
+   end
+   rule 'declarafunciones : IDENTIFICADOR PARENTESISA listaident PARENTESISC DOSPUNTOS INDICADORDETIPO' do |decla,ident|
+     blo.value = ident.value
+   end
+   rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque PUNTOYCOMA' do |decla,ident|
+     decla.value = ident.value
+    end
+
+   rule 'listaident : IDENTIFICADOR COMA IDENTIFICADOR' do |enun, secuenci|
+    enun.value = secuenci.value
+  end
+	
+  rule 'enunciados : BEGIN secuenciaenun END' do |enun, secuenci|
+    enun.value = secuenci.value
+  end
+
+  rule 'secuenciaenun :enunciado PUNTOYCOMA secuenciaenun
+  					  |enunciado PUNTOYCOMA' do |blo,inst|
+    blo.value = inst.value
+  end
+
+  rule 'enunciado : IDENTIFICADOR PARENTESISA instruccion PARENTESISC
+  				  | IDENTIFICADOR PARENTESISA IDENTIFICADOR PARENTESISC
+  				  | IDENTIFICADOR PARENTESISA identificadores PARENTESISC
+  				  | instruccion
+  				  | WRITE PARENTESISA salida PARENTESISC
+  				  | READ PARENTESISA identificadores PARENTESISC' do |blo, ins|
+    blo.value = ins.value
+  end
+  
+  rule 'salida : salida COMA salida
+  				| identificadores
+  				| CADENA 
+  				| NUMBERINT
+  			    | NUMBERFLOAT' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'identificadores :identificadores COMA identificadores
+  						| identificadores PUNTO identificadores 
+  				        | IDENTIFICADOR' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'instruccion :operacionm
+  					| IDENTIFICADOR ASIGNACION IDENTIFICADOR
+  					| IDENTIFICADOR ASIGNACION operacionm
+  					| IDENTIFICADOR ASIGNACION operacional' do |blo, decla|
+    blo.value = decla.value
+  end
+
+  
+  rule 'operacional : IDENTIFICADOR MAS IDENTIFICADOR
+                   | IDENTIFICADOR MENOS IDENTIFICADOR
+                   | IDENTIFICADOR TIMES IDENTIFICADOR
+                   | IDENTIFICADOR DIV IDENTIFICADOR' do |ex, e1, op, e2|
+    puts "HACIENDO OPERACION MATEMATICA"
+    ex.value = e1.value
+  end
+
+  rule 'operacionm : numero MAS numero
+                   | numero MENOS numero
+                   | numero TIMES numero
+                   | numero DIV numero' do |ex, e1, op, e2|
+    puts "HACIENDO OPERACION MATEMATICA"
     ex.value = e1.value.send(op.value, e2.value)
   end
 
-  rule 'expression : NUMBERINT' do |ex, n|
+  rule 'numero : NUMBERINT
+  			   | NUMBERFLOAT' do |ex, n|
+  	puts "ENTERO!!!!"
     ex.value = n.value
   end
 end

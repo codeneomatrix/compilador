@@ -143,4 +143,4 @@ begin
 nombre := 'Carlos Fernandez';
 legajo := 12345;
 prom := 4.50;
-end;
+end.
