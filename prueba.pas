@@ -20,3 +20,6 @@ program OtroEjemplo;
 END
 {numero de vueltas que dara el bucle}
 (*otro comentario*)
+
+
+2+2
