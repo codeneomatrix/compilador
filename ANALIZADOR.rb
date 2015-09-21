@@ -671,7 +671,7 @@ class CalcParse < Rly::Yacc
   					| identificadores ASIGNACION INDICADORDETIPO
   					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla,o|
     blo.value = decla.value
-    tabla[blo.value]= o.value
+    tabla[blo.value]= decla.value
      puts("\n\n")
      puts(tabla)
      puts("\n\n")
