@@ -11,7 +11,7 @@ program OtroEjemplo;
 	begin 
 		writeln('Ingrese dos numeros' ); 
 		readln(a,b); 
-		Cambiar(a,b); 
+		Cambio(a,b); 
 		writeln('El primer numero que ingreso fue',a); 
 		writeln('El segundo numero fue',b); {numero de vueltas que dara el bucle} 
 		(*otro comentario*)

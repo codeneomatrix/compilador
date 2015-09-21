@@ -471,25 +471,41 @@ end
 
 
 class CalcParse < Rly::Yacc
+	tabla={}
 	precedence :left,  '+', '-'
 	precedence :left,  '*', '/'
 
   rule 'statement : programa' do |st, pro|
     st.value = pro.value
+    puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
   end
 
   rule 'programa : encabezado bloque PUNTO' do |pro, enca, blo|
     pro.value = blo.value
+    tabla[enca.value]= blo.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
   end
 
   rule 'encabezado :PROGRAM IDENTIFICADOR PARENTESISA listaident PARENTESISC PUNTOYCOMA
   				   |PROGRAM IDENTIFICADOR PUNTOYCOMA' do |enca,identifi,listaiden|
-  	puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{identifi.value}"
+  	puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{enca.value}"
     enca.value = listaiden.value
+    tabla[identifi.value]= listaiden.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
   end
 
   rule 'bloque : declaraciones enunciados' do |blo, decla, enun|
     blo.value = enun.value
+    tabla[decla.value]= enun.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
   end
 
   
@@ -508,14 +524,22 @@ class CalcParse < Rly::Yacc
      				 | FUNCTION declarafunciones PUNTOYCOMA
      				 | PROCEDURE declaraprocemientos PUNTOYCOMA' do |decla, declar,puntoyc|
      decla.value = declar.value
+     tabla[declar.value]= puntoyc.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
    end
 
    rule 'declaracion_variable :declaravariables PUNTOYCOMA declaravariables' do |decla, inde|
      decla.value = inde.value
    end
    rule 'declaravariables :identificadorv DOSPUNTOS INDICADORDETIPO
-   						  | identificadorv DOSPUNTOS IDENTIFICADOR ' do |decla, inde|
+   						  | identificadorv DOSPUNTOS IDENTIFICADOR ' do |decla, inde,o|
      decla.value = inde.value
+     tabla[inde.value]= o.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
    end
    rule 'identificadorv : IDENTIFICADOR
    						  | identificadorv COMA identificadorv ' do |decla, inde|
@@ -536,8 +560,12 @@ class CalcParse < Rly::Yacc
 
    rule 'declaraconstantes :IDENTIFICADOR ASIGNACION IDENTIFICADOR
   					      | IDENTIFICADOR ASIGNACION expresion
-  					      | IDENTIFICADOR ASIGNACION CADENA ' do |decla,ident|
+  					      | IDENTIFICADOR ASIGNACION CADENA ' do |decla,ident,cad|
      decla.value = ident.value
+     tabla[decla.value]= cad.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
    end
    rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque ' do |decla,ident|
      decla.value = ident.value
@@ -641,8 +669,13 @@ class CalcParse < Rly::Yacc
   					| IDENTIFICADOR ASIGNACION IDENTIFICADOR
   					| IDENTIFICADOR ASIGNACION INDICADORDETIPO 
   					| identificadores ASIGNACION INDICADORDETIPO
-  					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla|
+  					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla,o|
     blo.value = decla.value
+    tabla[blo.value]= o.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
+
   end
 
 
@@ -661,7 +694,6 @@ class CalcParse < Rly::Yacc
   				   |termino TIMES factor
                    | termino DIV factor
                    | PARENTESISA termino DIV factor PARENTESISC' do |ex, e1, op, e2|
-    puts "HACIENDO OPERACION MATEMATICA"
     ex.value = e1.value
   end
 
@@ -672,8 +704,12 @@ class CalcParse < Rly::Yacc
 
   rule 'numero : NUMBERINT
   			   | NUMBERFLOAT' do |ex, n|
-  	puts "ENTERO!!!!"
+  	
     ex.value = n.value
+    tabla[ex.value]= n.value
+     puts("\n\n")
+     puts(tabla)
+     puts("\n\n")
   end
 end
 
@@ -691,18 +727,26 @@ end
 def semantica(cadena)
 parser = CalcParse.new(CalcLex.new)
 
-puts(parser.parse(cadena,true))
+puts(parser.parse(cadena))
 end
 
-def analizador(cadena, tabla)
+def analizador(cadena, tabla,posison)
 lex = CalcLex.new(cadena)
+tipo = ""
+esta = false
 while true
 	tok = lex.next
 	if tok != nil 
 		puts "		#{tok.type} #{tok.value}"
+		if "#{tok.type}" == "PROGRAM" || "#{tok.type}" == "FUNCTION" || "#{tok.type}" =="PROCEDURE" || "#{tok.type}" =="VAR"|| "#{tok.type}" =="CONST"
+         tipo = "#{tok.type}" 
+         end
+
 		if "#{tok.type}" == "IDENTIFICADOR"
-		tabla[tok.value]=tok.type
-	    end
+		  tabla["#{tok.value}"]=[posison,tok.value,tok.type,tipo]
+		  posison += 1
+		 end 
+	    
 	end
 	if not tok
 		break
@@ -713,9 +757,9 @@ end
 
 def vertabla(tabla)
 	puts "               TABLA DE SIMBOLOS"
-	puts "|         NOMBRE\033[100D \033[20C|         TIPO        |"
+	puts "|         NOMBRE\033[100D \033[21C|         Clase   \033[100D\033[40C|  Etiqueta   |"
 	tabla.each do |k, v|
-	  puts "   #{k} \033[100D \033[20C|  #{v}"
+	  puts "   #{v[0]} \033[100D \033[5C|  #{v[1]}\033[100D\033[22C|  #{v[2]}\033[100D\033[40C|  #{v[3]}"
 	end
 end
 
@@ -733,7 +777,6 @@ puts "\t************************************************************************
 tabla= {}
 
 
-
 puts "Url del archivo .pas:"  
 STDOUT.flush  
 url = gets.chomp  
@@ -747,10 +790,11 @@ cadenaunica = ""
 puts "\t\tANALIZADOR LEXICOGRAFICO"
 
 File.open(url, 'r') do |f1|
+  posision =0
   while linea = f1.gets
   	if linea != "\n"
 	  	puts "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
-	    analizador(linea, tabla)
+	    analizador(linea, tabla,posision)
 	    cadenaunica += linea
 	    puts "\n\033[1;37m"
 	    vertabla(tabla)
