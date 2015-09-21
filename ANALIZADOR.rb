@@ -477,17 +477,17 @@ class CalcParse < Rly::Yacc
 
   rule 'statement : programa' do |st, pro|
     st.value = pro.value
-    puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+    # puts("\n\n")
+    #  puts(tabla)
+    #  puts("\n\n")
   end
 
   rule 'programa : encabezado bloque PUNTO' do |pro, enca, blo|
     pro.value = blo.value
     tabla[enca.value]= blo.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
   end
 
   rule 'encabezado :PROGRAM IDENTIFICADOR PARENTESISA listaident PARENTESISC PUNTOYCOMA
@@ -495,17 +495,17 @@ class CalcParse < Rly::Yacc
   	puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{enca.value}"
     enca.value = listaiden.value
     tabla[identifi.value]= listaiden.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
   end
 
   rule 'bloque : declaraciones enunciados' do |blo, decla, enun|
     blo.value = enun.value
     tabla[decla.value]= enun.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
   end
 
   
@@ -524,10 +524,10 @@ class CalcParse < Rly::Yacc
      				 | FUNCTION declarafunciones PUNTOYCOMA
      				 | PROCEDURE declaraprocemientos PUNTOYCOMA' do |decla, declar,puntoyc|
      decla.value = declar.value
-     tabla[declar.value]= puntoyc.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     #tabla[declar.value]= puntoyc.value
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
    end
 
    rule 'declaracion_variable :declaravariables PUNTOYCOMA declaravariables' do |decla, inde|
@@ -536,10 +536,10 @@ class CalcParse < Rly::Yacc
    rule 'declaravariables :identificadorv DOSPUNTOS INDICADORDETIPO
    						  | identificadorv DOSPUNTOS IDENTIFICADOR ' do |decla, inde,o|
      decla.value = inde.value
-     tabla[inde.value]= o.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     #tabla[inde.value]= o.value
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
    end
    rule 'identificadorv : IDENTIFICADOR
    						  | identificadorv COMA identificadorv ' do |decla, inde|
@@ -562,10 +562,10 @@ class CalcParse < Rly::Yacc
   					      | IDENTIFICADOR ASIGNACION expresion
   					      | IDENTIFICADOR ASIGNACION CADENA ' do |decla,ident,cad|
      decla.value = ident.value
-     tabla[decla.value]= cad.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+     #tabla[decla.value]= cad.value
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
    end
    rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque ' do |decla,ident|
      decla.value = ident.value
@@ -671,10 +671,10 @@ class CalcParse < Rly::Yacc
   					| identificadores ASIGNACION INDICADORDETIPO
   					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla,o|
     blo.value = decla.value
-    tabla[blo.value]= decla.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+    #tabla[blo.value]= decla.value
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
 
   end
 
@@ -706,10 +706,10 @@ class CalcParse < Rly::Yacc
   			   | NUMBERFLOAT' do |ex, n|
   	
     ex.value = n.value
-    tabla[ex.value]= n.value
-     puts("\n\n")
-     puts(tabla)
-     puts("\n\n")
+    #tabla[ex.value]= n.value
+     # puts("\n\n")
+     # puts(tabla)
+     # puts("\n\n")
   end
 end
 
@@ -721,13 +721,13 @@ end
 #------------------------------------------------------
 
 def tablasimbolos(clave,valor)
-	tabla[clave]  = valor
+	#tabla[clave]  = valor
 end
 
 def semantica(cadena)
 parser = CalcParse.new(CalcLex.new)
 
-puts(parser.parse(cadena))
+puts(parser.parse(cadena,true))
 end
 
 def analizador(cadena, tabla,posison)
