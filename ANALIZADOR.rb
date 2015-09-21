@@ -680,11 +680,14 @@ def tablasimbolos(clave,valor)
 	tabla[clave]  = valor
 end
 
+def semantica(cadena)
+parser = CalcParse.new(CalcLex.new)
+
+puts(parser.parse(cadena,true))
+end
 
 def analizador(cadena, tabla)
 lex = CalcLex.new(cadena)
-parser = CalcParse.new(CalcLex.new)
-
 while true
 	tok = lex.next
 	if tok != nil 
@@ -698,7 +701,6 @@ while true
 	end
 end
 
-puts(parser.parse(cadena,true))
 end
 
 def vertabla(tabla)
@@ -715,7 +717,7 @@ puts "\t************************************************************************
 puts "\t*************************************ALUMNOS:**************************************"
 puts "\t******ACEVEDO MALDONADO JOSUE             		                     ******"
 puts "\t******MORALES MARTINEZ MARIA                				     ******"
-puts "\t******OLIVERA LUIS             		                                     ******"
+puts "\t******OLIVERA ROSAS LUIS MIGUEL             		                     ******"
 puts "\t******PEREZ CARRERA CARLOS             		                             ******"
 puts "\t******RUIZ GONZALES ALEXANDER             		                     ******"
 puts "\t******						                             ******"
@@ -731,15 +733,18 @@ url = gets.chomp
 
 #url = C:\Users\Neomatrix\Desktop\pascalero.pas
 
-
+cadenaunica = ""
 # Abre y lee un fichero
 # Se usa un bloque: el fichero se cierra
 # automáticamente al acabar el bloque.
+puts "\t\tANALIZADOR LEXICOGRAFICO"
+
 File.open(url, 'r') do |f1|
   while linea = f1.gets
   	if linea != "\n"
 	  	puts "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
 	    analizador(linea, tabla)
+	    cadenaunica += linea
 	    puts "\n\033[1;37m"
 	    vertabla(tabla)
 	    puts "\033[1;36m"
@@ -748,3 +753,8 @@ File.open(url, 'r') do |f1|
 end
 puts "\033[1;37m"
 
+puts "\t\tANALIZADOR SEMANTICO"
+
+puts(cadenaunica)
+
+semantica(cadenaunica);
