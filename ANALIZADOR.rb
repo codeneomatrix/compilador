@@ -13,7 +13,7 @@ class CalcLex < Rly::Lex
   		#t.type = "COMENTARIO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
-  		t
+  		nil
   end 
 
 #--------------------------------------------
@@ -442,37 +442,7 @@ class CalcLex < Rly::Lex
 
  #-----------------OPERACION DE RELACION------------------------------------
 #----------------------------------------------------------
-  token :DESIGUAL, /¬=|<>/ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :MAYOROIGUALQUE, />=/ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :MENOROIGUALQUE, /<=/ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :MENORQUE, /</ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :MAYORQUE, />/ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end 
-  token :IGUAL, /=/ do |t|
+  token :OPERADORLOGICO, /¬=|<>|>=|<=|<|>|=/ do |t|
   		#t.type = "OPERADOR DE RELACION"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -581,15 +551,46 @@ class CalcParse < Rly::Yacc
     blo.value = inst.value
   end
 
-  rule 'enunciado : IDENTIFICADOR PARENTESISA instruccion PARENTESISC
-  				  | IDENTIFICADOR PARENTESISA IDENTIFICADOR PARENTESISC
-  				  | IDENTIFICADOR PARENTESISA identificadores PARENTESISC
-  				  | instruccion
-  				  | WRITE PARENTESISA salida PARENTESISC
-  				  | READ PARENTESISA identificadores PARENTESISC' do |blo, ins|
+  rule 'enunciado : instruccion
+  				  | if
+  				  | while
+  				  | case ' do |blo, ins|
     blo.value = ins.value
   end
   
+  rule 'if: IF expresionlogica THEN enunciados ELSE enunciados
+  		  | IF expresionlogica THEN instruccion ELSE instruccion
+  		  | IF expresionlogica THEN enunciados
+  		  | IF expresionlogica THEN instruccion' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'while: WHILE expresionlogica DO enunciados
+  		     | WHILE expresionlogica DO instruccion' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'case: CASE expresion OF elementos END
+  		    | CASE expresion OF elementos PUNTOYCOMA END ' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'elementos: elementos  PUNTOYCOMA elementos 
+  				 | cadenas DOSPUNTOS instruccion' do |blo, ins|
+    blo.value = ins.value
+  end
+
+  rule 'cadenas: cadenas COMA cadenas
+  			   | CADENA' do |blo, ins|
+    blo.value = ins.value
+  end
+
+
+  rule 'expresionlogica: expresion OPERADORLOGICO expresion' do |blo, ins|
+    blo.value = ins.value
+  end
+
+
   rule 'salida : salida COMA salida
   				| identificadores
   				| CADENA 
@@ -604,28 +605,43 @@ class CalcParse < Rly::Yacc
     blo.value = ins.value
   end
 
-  rule 'instruccion :operacionm
+  rule 'instruccion : expresion
+                      | IDENTIFICADOR PARENTESISA instruccion PARENTESISC
+	  				  | IDENTIFICADOR PARENTESISA IDENTIFICADOR PARENTESISC
+	  				  | IDENTIFICADOR PARENTESISA identificadores PARENTESISC
+	  				  | instruccion
+	  				  | WRITE PARENTESISA salida PARENTESISC
+	  				  | READ PARENTESISA identificadores PARENTESISC
   					| IDENTIFICADOR ASIGNACION IDENTIFICADOR
-  					| IDENTIFICADOR ASIGNACION operacionm
-  					| IDENTIFICADOR ASIGNACION operacional' do |blo, decla|
+  					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla|
     blo.value = decla.value
   end
 
   
-  rule 'operacional : IDENTIFICADOR MAS IDENTIFICADOR
-                   | IDENTIFICADOR MENOS IDENTIFICADOR
-                   | IDENTIFICADOR TIMES IDENTIFICADOR
-                   | IDENTIFICADOR DIV IDENTIFICADOR' do |ex, e1, op, e2|
+
+  rule 'expresion :  termino MAS expresion
+  				   | PARENTESISA termino MAS expresion  PARENTESISC
+                   | termino MENOS expresion
+                   | PARENTESISA termino MENOS expresion PARENTESISC
+                   | termino
+                   | PARENTESISA termino PARENTESISC' do |ex, e1, op, e2|
     puts "HACIENDO OPERACION MATEMATICA"
     ex.value = e1.value
   end
 
-  rule 'operacionm : numero MAS numero
-                   | numero MENOS numero
-                   | numero TIMES numero
-                   | numero DIV numero' do |ex, e1, op, e2|
+  rule 'termino :   factor
+  				   | PARENTESISA factor PARENTESISC
+  				   | PARENTESISA termino TIMES factor PARENTESISC
+  				   |termino TIMES factor
+                   | termino DIV factor
+                   | PARENTESISA termino DIV factor PARENTESISC' do |ex, e1, op, e2|
     puts "HACIENDO OPERACION MATEMATICA"
-    ex.value = e1.value.send(op.value, e2.value)
+    ex.value = e1.value
+  end
+
+  rule 'factor : numero
+               | IDENTIFICADOR' do |ex, e1|
+    ex.value = e1.value 
   end
 
   rule 'numero : NUMBERINT
@@ -664,7 +680,7 @@ while true
 	end
 end
 
-puts(parser.parse(cadena,true))
+puts(parser.parse(cadena))
 end
 
 def vertabla(tabla)
