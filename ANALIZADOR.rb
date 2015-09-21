@@ -718,8 +718,8 @@ puts "\t*************************************ALUMNOS:***************************
 puts "\t******ACEVEDO MALDONADO JOSUE             		                     ******"
 puts "\t******MORALES MARTINEZ MARIA                				     ******"
 puts "\t******OLIVERA ROSAS LUIS MIGUEL             		                     ******"
-puts "\t******PEREZ CARRERA CARLOS             		                             ******"
-puts "\t******RUIZ GONZALES ALEXANDER             		                     ******"
+puts "\t******PEREZ CARRERA CARLOS FRANCISCO             		                 ******"
+puts "\t******RUIZ GONZALEZ ALEXANDER             		                     ******"
 puts "\t******						                             ******"
 puts "\t***********************************************************************************"
 
