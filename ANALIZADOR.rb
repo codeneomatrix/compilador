@@ -2,7 +2,7 @@ require "rly"
 class CalcLex < Rly::Lex
   ignore " \t\n"
 
- token :CADENA, /'\w(\w|\s|-|!|@|#|$|%|&)*'/ do |t|
+ token :CADENA, /'\w(\w|\s|-|!|,|\.|\(|\)|@|#|$|%|&)*'/ do |t|
   		#t.type = "CADENA DE TEXTO"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -718,7 +718,7 @@ puts "\t*************************************ALUMNOS:***************************
 puts "\t******ACEVEDO MALDONADO JOSUE             		                     ******"
 puts "\t******MORALES MARTINEZ MARIA                				     ******"
 puts "\t******OLIVERA ROSAS LUIS MIGUEL             		                     ******"
-puts "\t******PEREZ CARRERA CARLOS FRANCISCO             		                 ******"
+puts "\t******PEREZ CARRERA CARLOS FRANCISCO             		             ******"
 puts "\t******RUIZ GONZALEZ ALEXANDER             		                     ******"
 puts "\t******						                             ******"
 puts "\t***********************************************************************************"
@@ -748,6 +748,9 @@ File.open(url, 'r') do |f1|
 	    puts "\n\033[1;37m"
 	    vertabla(tabla)
 	    puts "\033[1;36m"
+	    puts "presione una tecla para continuar"
+	    STDOUT.flush  
+		continuar = gets.chomp 
 	end
   end
 end
@@ -757,4 +760,12 @@ puts "\t\tANALIZADOR SEMANTICO"
 
 puts(cadenaunica)
 
+puts "presione una tecla para continuar..."
+	    STDOUT.flush  
+		continuar = gets.chomp 
+
 semantica(cadenaunica);
+
+puts "presione una tecla para continuar..."
+	    STDOUT.flush  
+		continuar = gets.chomp 
