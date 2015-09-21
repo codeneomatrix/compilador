@@ -499,12 +499,12 @@ class CalcParse < Rly::Yacc
   end
 
   
- rule 'declaraciones: VAR declaravariables PUNTOYCOMA declaraciones
+ rule 'declaraciones:  VAR declaravariables PUNTOYCOMA declaraciones
  				     | PROCEDURE declaraprocemientos declaraciones
- 					 | declaraetiqueta declaraciones
- 					 | declaraetiqueta
-     				 | declaraconstantes declaraciones
-     				 | declaraconstantes
+ 					 | LABEL declaraetiqueta declaraciones
+ 					 | LABEL declaraetiqueta
+     				 | CONST declaraconstantes declaraciones
+     				 | CONST declaraconstantes
      				 | TYPE declaratipos declaraciones
      				 | TYPE declaratipos
      				 | VAR declaravariables PUNTOYCOMA
@@ -514,7 +514,7 @@ class CalcParse < Rly::Yacc
      decla.value = declar.value
    end
 
-   rule 'declaravariables : identificadorv DOSPUNTOS INDICADORDETIPO' do |decla, inde|
+   rule 'declaravariables : identificadorv DOSPUNTOS INDICADORDETIPO ' do |decla, inde|
      decla.value = inde.value
    end
    rule 'identificadorv : IDENTIFICADOR
@@ -522,16 +522,26 @@ class CalcParse < Rly::Yacc
      decla.value = inde.value
    end
 
-   rule 'declaraetiqueta : IDENTIFICADOR ' do |decla,iden|
+   rule 'declaraetiqueta : identificadorv  ' do |decla,iden|
      decla.value = iden.value
    end
-   rule 'declaratipos :IDENTIFICADOR ' do |decla,ident|
+   rule 'declaratipos :IDENTIFICADOR ASIGNACION INDICADORDETIPO
+   					  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC
+   					  | IDENTIFICADOR ASIGNACION rango' do |decla,ident|
      blo.value = ident.value
    end
-   rule 'declaraconstantes :CONST IDENTIFICADOR ' do |decla,ident|
+
+   rule 'rango : CADENA PUNTO PUNTO CADENA
+   				| numero PUNTO PUNTO numero ' do |decla,iden|
+     decla.value = iden.value
+   end
+
+   rule 'declaraconstantes :IDENTIFICADOR ASIGNACION IDENTIFICADOR
+  					      | IDENTIFICADOR ASIGNACION expresion
+  					      | IDENTIFICADOR ASIGNACION CADENA ' do |decla,ident|
      blo.value = ident.value
    end
-   rule 'declarafunciones : IDENTIFICADOR PARENTESISA listaident PARENTESISC DOSPUNTOS INDICADORDETIPO' do |decla,ident|
+   rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque PUNTOYCOMA' do |decla,ident|
      blo.value = ident.value
    end
    rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque PUNTOYCOMA' do |decla,ident|
@@ -554,10 +564,18 @@ class CalcParse < Rly::Yacc
   rule 'enunciado : instruccion
   				  | if
   				  | while
-  				  | case ' do |blo, ins|
+  				  | case 
+  				  | for' do |blo, ins|
     blo.value = ins.value
   end
   
+  rule 'for: FOR IDENTIFICADOR ASIGNACION expresion TO expresion DO enunciados
+  		   | FOR IDENTIFICADOR ASIGNACION expresion TO expresion DO instruccion
+  		   | FOR IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO enunciados
+  		   | FOR IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO instruccion' do |blo, ins|
+    blo.value = ins.value
+  end
+
   rule 'if: IF expresionlogica THEN enunciados ELSE enunciados
   		  | IF expresionlogica THEN instruccion ELSE instruccion
   		  | IF expresionlogica THEN enunciados
@@ -576,7 +594,8 @@ class CalcParse < Rly::Yacc
   end
 
   rule 'elementos: elementos  PUNTOYCOMA elementos 
-  				 | cadenas DOSPUNTOS instruccion' do |blo, ins|
+  				 | cadenas DOSPUNTOS instruccion
+  				 | numero DOSPUNTOS instruccion' do |blo, ins|
     blo.value = ins.value
   end
 
@@ -625,7 +644,6 @@ class CalcParse < Rly::Yacc
                    | PARENTESISA termino MENOS expresion PARENTESISC
                    | termino
                    | PARENTESISA termino PARENTESISC' do |ex, e1, op, e2|
-    puts "HACIENDO OPERACION MATEMATICA"
     ex.value = e1.value
   end
 
@@ -680,7 +698,7 @@ while true
 	end
 end
 
-puts(parser.parse(cadena))
+puts(parser.parse(cadena,true))
 end
 
 def vertabla(tabla)
