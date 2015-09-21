@@ -100,12 +100,7 @@ class CalcLex < Rly::Lex
   		#puts("SIGNO #{t.value}")
   		t
   end
-  token :ARRAY, /array|ARRAY/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value  	
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
+  
 
   token :BEGIN, /begin|BEGIN/ do |t|
   		#t.type = "PALABRA RESERVADA"
@@ -363,13 +358,12 @@ class CalcLex < Rly::Lex
   end
 #-----------------TIPOS------------------------------------
 #----------------------------------------------------------
-  token :INDICADORDETIPO, /integer|INTEGER|byte|BYTE|shortint|SHORTINT|word|WORD|longint|LONGINT|real|REAL|char|CHAR|string|STRING|boolean|BOOLEAN|Text|text/ do |t|
-  		#t.type = "TIPO DE ARCHIVO"
+  token :INDICADORDETIPO, /integer|INTEGER|byte|BYTE|shortint|SHORTINT|word|WORD|longint|LONGINT|real|REAL|char|CHAR|string|STRING|boolean|BOOLEAN|Text|text|array|ARRAY/ do |t|
+  		#t.type = "PALABRA RESERVADA"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
-  end 
-
+  end
 #------------------------------------------------------
   token :TRUE, /true|TRUE/ do |t|
   		#t.type = "BOOLEANO"
@@ -499,22 +493,28 @@ class CalcParse < Rly::Yacc
   end
 
   
- rule 'declaraciones:  VAR declaravariables PUNTOYCOMA declaraciones
- 				     | PROCEDURE declaraprocemientos declaraciones
+ rule 'declaraciones:  VAR declaracion_variable PUNTOYCOMA declaraciones
+ 					 | VAR declaravariables PUNTOYCOMA declaraciones
+ 				     | PROCEDURE declaraprocemientos PUNTOYCOMA declaraciones
  					 | LABEL declaraetiqueta declaraciones
  					 | LABEL declaraetiqueta
      				 | CONST declaraconstantes declaraciones
      				 | CONST declaraconstantes
-     				 | TYPE declaratipos declaraciones
-     				 | TYPE declaratipos
+     				 | TYPE declaratipos declaraciones 
+     				 | TYPE declaratipos 
+     				 | VAR declaracion_variable PUNTOYCOMA
      				 | VAR declaravariables PUNTOYCOMA
-     				 | FUNCTION declarafunciones declaraciones
-     				 | FUNCTION declarafunciones
-     				 | PROCEDURE declaraprocemientos' do |decla, declar,puntoyc|
+     				 | FUNCTION declarafunciones PUNTOYCOMA declaraciones
+     				 | FUNCTION declarafunciones PUNTOYCOMA
+     				 | PROCEDURE declaraprocemientos PUNTOYCOMA' do |decla, declar,puntoyc|
      decla.value = declar.value
    end
 
-   rule 'declaravariables : identificadorv DOSPUNTOS INDICADORDETIPO ' do |decla, inde|
+   rule 'declaracion_variable :declaravariables PUNTOYCOMA declaravariables' do |decla, inde|
+     decla.value = inde.value
+   end
+   rule 'declaravariables :identificadorv DOSPUNTOS INDICADORDETIPO
+   						  | identificadorv DOSPUNTOS IDENTIFICADOR ' do |decla, inde|
      decla.value = inde.value
    end
    rule 'identificadorv : IDENTIFICADOR
@@ -525,10 +525,8 @@ class CalcParse < Rly::Yacc
    rule 'declaraetiqueta : identificadorv  ' do |decla,iden|
      decla.value = iden.value
    end
-   rule 'declaratipos :IDENTIFICADOR ASIGNACION INDICADORDETIPO
-   					  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC
-   					  | IDENTIFICADOR ASIGNACION rango' do |decla,ident|
-     blo.value = ident.value
+   rule 'declaratipos :secuenciaenun  ' do |decla,ident|
+     decla.value = ident.value
    end
 
    rule 'rango : CADENA PUNTO PUNTO CADENA
@@ -539,12 +537,13 @@ class CalcParse < Rly::Yacc
    rule 'declaraconstantes :IDENTIFICADOR ASIGNACION IDENTIFICADOR
   					      | IDENTIFICADOR ASIGNACION expresion
   					      | IDENTIFICADOR ASIGNACION CADENA ' do |decla,ident|
-     blo.value = ident.value
+     decla.value = ident.value
    end
-   rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque PUNTOYCOMA' do |decla,ident|
-     blo.value = ident.value
+   rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque ' do |decla,ident|
+     decla.value = ident.value
    end
-   rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque PUNTOYCOMA' do |decla,ident|
+   rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque
+   							 |IDENTIFICADOR PARENTESISA VAR declaravariables PARENTESISC bloque ' do |decla,ident|
      decla.value = ident.value
     end
 
@@ -614,7 +613,8 @@ class CalcParse < Rly::Yacc
   				| identificadores
   				| CADENA 
   				| NUMBERINT
-  			    | NUMBERFLOAT' do |blo, ins|
+  			    | NUMBERFLOAT
+  			    | expresion' do |blo, ins|
     blo.value = ins.value
   end
 
@@ -625,18 +625,26 @@ class CalcParse < Rly::Yacc
   end
 
   rule 'instruccion : expresion
-                      | IDENTIFICADOR PARENTESISA instruccion PARENTESISC
-	  				  | IDENTIFICADOR PARENTESISA IDENTIFICADOR PARENTESISC
-	  				  | IDENTIFICADOR PARENTESISA identificadores PARENTESISC
+                      | IDENTIFICADOR PARENTESISA salida PARENTESISC
+	  				  | IDENTIFICADOR ASIGNACION FILE OF IDENTIFICADOR
+	  				  | IDENTIFICADOR ASIGNACION FILE OF INDICADORDETIPO
+	  				  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC 
+	  				  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC OF IDENTIFICADOR
+	  				  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA rango CORCHETEC OF IDENTIFICADOR
+	  				  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC OF INDICADORDETIPO
+	  				  | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA rango CORCHETEC OF INDICADORDETIPO
+	  				  | IDENTIFICADOR ASIGNACION rango
 	  				  | instruccion
 	  				  | WRITE PARENTESISA salida PARENTESISC
 	  				  | READ PARENTESISA identificadores PARENTESISC
+	  				|IDENTIFICADOR ASIGNACION RECORD secuenciaenun END
   					| IDENTIFICADOR ASIGNACION IDENTIFICADOR
+  					| IDENTIFICADOR ASIGNACION INDICADORDETIPO 
+  					| identificadores ASIGNACION INDICADORDETIPO
   					| IDENTIFICADOR ASIGNACION expresion' do |blo, decla|
     blo.value = decla.value
   end
 
-  
 
   rule 'expresion :  termino MAS expresion
   				   | PARENTESISA termino MAS expresion  PARENTESISC

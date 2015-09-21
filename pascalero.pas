@@ -2,23 +2,23 @@ program infoProfesores;
 	type
 		cadena := string [30];
 		curso := record
-		titulo: string[30];
-		horaI, horaF: real;
-	end;
+		titulo:= string[30];
+		horaI, horaF:= real;
+		end;
 	trescursos := array[1..3] of curso;
 	profesor := record
-		nombre: cadena;
-		cursos: trescursos;
-	end;
+		nombre:= cadena;
+		cursos:= trescursos;
+			end;
 	archiProfes := file of profesor;
 	listaProfes := nodoProfe;
 	nodoProfe := record
-		dato: profesor;
-		psig: listaProfes;
-	end;
+		dato:= profesor;
+		psig:= listaProfes;
+		end;
 	var
 		lista: listaProfes;
-	procedure CargarInfo (var lista: listaProfes);
+	procedure CargarInfo ( VAR lista: listaProfes)
 		var
 			profe: profesor;
 			archi: archiProfes;
@@ -34,7 +34,7 @@ program infoProfesores;
 		end;
 		Close( archi);
 	end;
-	procedure ActualizarInfo (var lista: listaProfes);
+	procedure ActualizarInfo ( lista: listaProfes)
 		var
 			profe: Cadena;
 			nro: integer;
@@ -52,7 +52,7 @@ program infoProfesores;
 				end;
 		end;
 
-	procedure AnalizarCambio (var lista: listaProfes; profe: Cadena; n:integer; nuevoCurso:curso);
+	procedure AnalizarCambio ( lista: listaProfes; profe: Cadena; n:integer; nuevoCurso:curso)
 	var
 		regProfe: profesor
 	begin
@@ -69,7 +69,7 @@ program infoProfesores;
 		else writeln('El profesor no esta registrado');
 	end;
 
-	function SuperposicionHoraria (nuevo: curso, cursos : trescursos; n: integer): boolean; 
+	function SuperposicionHoraria (nuevo: curso, cursos : trescursos; n: integer): boolean 
 		{Sintaxis y Semantica del Lenguaje }
 		begin { del programa ppal }
 			CargarInfo(lista);
