@@ -719,16 +719,15 @@ def vertabla(tabla)
 	end
 end
 
+puts "\t************************ COMPILADOR DEL LENGUAJE PASCAL v 0.1 *********************"
 puts "\t***********************************************************************************"
-puts "\t***************************Compilador de lenguaje pascal***************************"
+puts "\t************************             ALUMNOS:              ************************"
 puts "\t***********************************************************************************"
-puts "\t*************************************ALUMNOS:**************************************"
-puts "\t******ACEVEDO MALDONADO JOSUE             		                     ******"
-puts "\t******MORALES MARTINEZ MARIA                				     ******"
-puts "\t******OLIVERA ROSAS LUIS MIGUEL             		                     ******"
-puts "\t******PEREZ CARRERA CARLOS FRANCISCO             		             ******"
-puts "\t******RUIZ GONZALEZ ALEXANDER             		                     ******"
-puts "\t******						                             ******"
+puts "\t******                  ACEVEDO MALDONADO JOSUE                              ******"
+puts "\t******                  MORALES MARTINEZ MARIA                               ******"
+puts "\t******                  OLIVERA ROSAS LUIS MIGUEL                            ******"
+puts "\t******                  PEREZ CARRERA CARLOS FRANCISCO                       ******"
+puts "\t******                  RUIZ GONZALEZ ALEXANDER                              ******"
 puts "\t***********************************************************************************"
 
 tabla= {}
