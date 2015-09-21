@@ -1,16 +1,19 @@
-# COMPILADOR
-Analizador a usar:
+# COMPILADOR DE PASCAL HECHO EN RUBY
+### ++OJO, TENER INSTALADA LA VERSIÓN DE RUBY SUPERIOR A 2++
+## Analizador a usar:
   - rly
+  - Información: [https://github.com/farcaller/rly ]
 
-[https://github.com/farcaller/rly ]
+## COMO INSTALAR rly:
+ gem install rly
 
-### uso
+## USO
 En la ubicacion de los archivos se abre una consola y se escribe:
-```sh
+```
  ruby ANALIZADOR.rb
 ```
 aprecera en la consola lo siguiente:
- ```sh
+ ```
  Url del archivo .pas:
  {Escribe la url del archivo con extension .pas}
  ......
