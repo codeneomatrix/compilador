@@ -488,7 +488,7 @@ class CalcParse < Rly::Yacc
   rule 'programa : encabezado bloque PUNTO' do |pro, enca, blo,o|
     pro.value = blo.value
     #$tabla[enca.value]= blo.value
-    $salida+="\n\t|\t|\t|\n\t   #{enca.value}\n\tArbol"
+    $salida+="\n\t|\t|\t|\n\t   #{enca.value}\n"
   end
 
   rule 'encabezado :PROGRAM IDENTIFICADOR PARENTESISA listaident PARENTESISC PUNTOYCOMA
@@ -675,7 +675,7 @@ class CalcParse < Rly::Yacc
     #  puts("aqui")
     #  puts(tabla)
     #  puts("\n\n")
-    $salida+="\n  #{blo.value} "
+    $salida+=" #{blo.value} "
   end
 
 
@@ -739,7 +739,7 @@ end
 def semantica(cadena)
 parser = CalcParse.new(CalcLex.new)
 
-puts(parser.parse(cadena))
+puts(parser.parse(cadena,true))
 end
 
 def analizador(cadena)
@@ -829,6 +829,7 @@ puts "presione una tecla para continuar..."
 
 semantica(cadenaunica)
 vertabla()
+puts("\n\tArbol\n")
 puts($salida)
 puts "presione una tecla para continuar..."
 	    STDOUT.flush  
