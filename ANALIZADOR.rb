@@ -675,7 +675,7 @@ class CalcParse < Rly::Yacc
     #  puts("aqui")
     #  puts(tabla)
     #  puts("\n\n")
-
+    $salida+="\n  #{blo.value} "
   end
 
 
@@ -686,6 +686,7 @@ class CalcParse < Rly::Yacc
                    | termino
                    | PARENTESISA termino PARENTESISC' do |ex, e1, op, e2|
     ex.value = e1.value
+    #$salida+="\n   #{e1.value} "
   end
 
   rule 'termino :   factor
@@ -694,13 +695,12 @@ class CalcParse < Rly::Yacc
   				   |termino TIMES factor
                    | termino DIV factor
                    | PARENTESISA termino DIV factor PARENTESISC' do |ex, e1, op, e2|
-    ex.value = e1.value
+    #ex.value = e1.value
   end
 
   rule 'factor : numero
                | IDENTIFICADOR' do |ex, e1|
     ex.value = e1.value 
-    $salida+="\t   #{e1.value}    "
   end
 
   rule 'numero : NUMBERINT
