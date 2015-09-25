@@ -1,9 +1,9 @@
 program infoProfesores;
 	type
-		cadena := string [30];
-		curso := record
-		titulo:= string[30];
-		horaI, horaF:= real;
+		cadena = string [30];
+		curso = record
+		titulo= string[30];
+		horaI, horaF= real;
 		end;
 	trescursos := array[1..3] of curso;
 	profesor := record

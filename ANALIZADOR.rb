@@ -23,6 +23,10 @@ class CalcLex < Rly::Lex
   end 
 
 #--------------------------------------------
+  token :IGUAL,/\=/ do |t|
+      t.value = t.value
+      t
+  end    
   token :MAS, /\+/ do |t|
   		##t.type = "SIGNO"
     	t.value = t.value
@@ -173,6 +177,12 @@ class CalcLex < Rly::Lex
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
   		t
+  end
+  token :NIL, /nil|NIL/ do |t|
+      #t.type = "PALABRA RESERVADA"
+      t.value = t.value   
+      #puts("SIGNO #{t.value}")
+      t
   end
   #----------conjunciones logicas-------
   token :AND, /and|AND/ do |t|
@@ -550,7 +560,11 @@ class CalcParse < Rly::Yacc
    rule 'declaraetiqueta : identificadorv  ' do |decla,iden|
      decla.value = iden.value
    end
-   rule 'declaratipos :secuenciaenun  ' do |decla,ident|
+   rule 'declaratipos :IDENTIFICADOR IGUAL INDICADORDETIPO PUNTOYCOMA
+          |IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC PUNTOYCOMA
+          |IDENTIFICADOR IGUAL RECORD secuenciaenun END PUNTOYCOMA
+          |IDENTIFICADOR IGUAL ARRAY CORCHETEA rango CORCHETEC OF INDICADORDETIPO PUNTOYCOMA
+          |' do |decla,ident|
      decla.value = ident.value
    end
 
