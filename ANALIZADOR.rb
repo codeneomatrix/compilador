@@ -452,7 +452,7 @@ class CalcLex < Rly::Lex
 
  #-----------------OPERACION DE RELACION------------------------------------
 #----------------------------------------------------------
-  token :OPERADORLOGICO, /¬=|<>|>=|<=|<|>|=/ do |t|
+  token :OPERADORLOGICO, /¬=|<>|>=|<=|<|>/ do |t|
   		#t.type = "OPERADOR DE RELACION"
     	t.value = t.value  	
   		#puts("SIGNO #{t.value}")
@@ -645,7 +645,8 @@ class CalcParse < Rly::Yacc
   end
 
 
-  rule 'expresionlogica: expresion OPERADORLOGICO expresion' do |blo, ins|
+  rule 'expresionlogica: expresion OPERADORLOGICO expresion
+                          |expresion IGUAL expresion' do |blo, ins|
     blo.value = ins.value
   end
 
