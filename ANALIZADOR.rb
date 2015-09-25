@@ -517,18 +517,15 @@ class CalcParse < Rly::Yacc
   end
 
   
- rule 'declaraciones:  VAR declaracion_variable PUNTOYCOMA declaraciones
- 					 | VAR declaravariables PUNTOYCOMA declaraciones
- 				     | PROCEDURE declaraprocemientos PUNTOYCOMA declaraciones
- 					 | LABEL declaraetiqueta declaraciones
- 					 | LABEL declaraetiqueta
+ rule 'declaraciones:  
+ 					     LABEL declaraetiqueta declaraciones
+ 					   | LABEL declaraetiqueta
      				 | CONST declaraconstantes declaraciones
      				 | CONST declaraconstantes
      				 | TYPE declaratipos declaraciones 
      				 | TYPE declaratipos 
      				 | VAR declaracion_variable PUNTOYCOMA
      				 | VAR declaravariables PUNTOYCOMA
-     				 | FUNCTION declarafunciones PUNTOYCOMA declaraciones
      				 | FUNCTION declarafunciones PUNTOYCOMA
      				 | PROCEDURE declaraprocemientos PUNTOYCOMA' do |decla, declar,puntoyc|
      decla.value = declar.value
@@ -539,6 +536,20 @@ class CalcParse < Rly::Yacc
       	$tabla["#{puntoyc.value}"][1]=declar.value
 
    end
+
+rule 'declaraciones:  VAR declaracion_variable PUNTOYCOMA declaraciones
+                    | VAR declaravariables PUNTOYCOMA declaraciones
+                    | PROCEDURE declaraprocemientos PUNTOYCOMA declaraciones
+                    | FUNCTION declarafunciones PUNTOYCOMA declaraciones' do |decla,varPrdFtn,dvpf,pyc,declars|
+     decla.value = varPrdFtn.value
+     #$tabla[declar.value]= puntoyc.value
+     #puts("\n\n#{puntoyc.value}")
+     #puts("aqui procedimiento, label funtion etc")
+
+        $tabla["#{dvpf.value}"][1]=varPrdFtn.value
+
+   end
+
 
    rule 'declaracion_variable :declaravariables PUNTOYCOMA declaravariables' do |decla, inde|
      decla.value = inde.value
@@ -560,11 +571,11 @@ class CalcParse < Rly::Yacc
    rule 'declaraetiqueta : identificadorv  ' do |decla,iden|
      decla.value = iden.value
    end
+
    rule 'declaratipos :IDENTIFICADOR IGUAL INDICADORDETIPO PUNTOYCOMA
-          |IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC PUNTOYCOMA
-          |IDENTIFICADOR IGUAL RECORD secuenciaenun END PUNTOYCOMA
-          |IDENTIFICADOR IGUAL ARRAY CORCHETEA rango CORCHETEC OF INDICADORDETIPO PUNTOYCOMA
-          |' do |decla,ident|
+                      |IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC PUNTOYCOMA
+                      |IDENTIFICADOR IGUAL RECORD secuenciaenun END PUNTOYCOMA
+                      |IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA rango CORCHETEC OF INDICADORDETIPO PUNTOYCOMA' do |decla,ident,igu,idtip,pyc|
      decla.value = ident.value
    end
 
@@ -726,8 +737,6 @@ class CalcParse < Rly::Yacc
 
   end
 end
-
-
 
 #------------------------------------------------------
 #------------------------------------------------------
