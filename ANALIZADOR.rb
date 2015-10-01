@@ -907,7 +907,8 @@ rule 'instruccion :
 #####################################################################################################################################
   rule 'termino :   
               PARENTESISA termino TIMES factor PARENTESISC
-            | PARENTESISA termino DIV factor PARENTESISC' do |termi, pa, ter,tidi,fac,pc|
+            | PARENTESISA termino DIV factor PARENTESISC
+            |  PARENTESISA termino MOD factor PARENTESISC'do |termi, pa, ter,tidi,fac,pc|
     #ex.value = e1.value
   end
 
