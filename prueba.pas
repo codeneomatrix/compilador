@@ -1,5 +1,6 @@
 program OtroEjemplo; 
 	var a, b : integer;
+	(*Probando Cambios*)
 	procedure Cambio(x,y : integer) 
 		var z:integer; 
 		begin 
