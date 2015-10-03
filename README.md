@@ -1,16 +1,13 @@
-# COMPILADOR
-Analizador a usar:
-  - rly
-
-[https://github.com/farcaller/rly ]
+# COMPILADOR PASCAL
+Compilador del leguaje pascal echo en julia
 
 ### uso
 En la ubicacion de los archivos se abre una consola y se escribe:
-```sh
- ruby ANALIZADOR.rb
+```julia
+ julia ANALIZADOR.jl
 ```
 aprecera en la consola lo siguiente:
- ```sh
+ ```julia
  Url del archivo .pas:
  {Escribe la url del archivo con extension .pas}
  ......
