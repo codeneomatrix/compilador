@@ -9,6 +9,28 @@ function leer(url)
   cadena
 end
 
+
+function analizacomentarios(cade)
+con1=0
+con2=0
+
+ for i = cade
+  if i == '{'
+      con1+=1
+  end
+  if i == '}'
+      con2+=1
+  end
+ end
+
+ if con1==con2
+    return 1
+ else
+    println(" \t \033[1;31m ✗ Error lexicografico falta un caracter { o un } \033[1;37m")
+    return 0
+ end
+end
+
 #=
 $tabla={}
 
@@ -1025,12 +1047,11 @@ cadenaunica= leer(url)
 
 println(cadenaunica)
 
-
-#cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t|\s","") 
-cadenaunica= replace(cadenaunica,r"{.+}|\(\*.+\*\)","") #quitando de raiz los comentarios!!!!
-
-println(cadenaunica)
-
+ if analizacomentarios(cadenaunica)==1
+  #cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t|\s","") 
+  cadenaunica= replace(cadenaunica,r"{.+}|\(\*.+\*\)","") #quitando de raiz los comentarios!!!!
+  println(cadenaunica)
+end
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # r = matchall(r"{.+}|\(\*.+\*\)", cade)
