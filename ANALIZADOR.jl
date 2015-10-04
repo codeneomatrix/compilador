@@ -1026,7 +1026,7 @@ cadenaunica= leer(url)
 println(cadenaunica)
 
 
-#cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t","") 
+#cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t|\s","") 
 cadenaunica= replace(cadenaunica,r"{.+}|\(\*.+\*\)","") #quitando de raiz los comentarios!!!!
 
 println(cadenaunica)
