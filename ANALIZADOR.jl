@@ -1,3 +1,14 @@
+function leer(url)
+  cadena=""
+  open(url) do f1
+    for linea in eachline(f1)
+        cadena*= linea
+        #println(linea)
+    end
+  end
+  cadena
+end
+
 #=
 $tabla={}
 
@@ -12,13 +23,6 @@ class CalcLex < Rly::Lex
     	t.value = t.value  	
   		#println("SIGNO #{t.value}")
   		t
-  end 
-#-----------------------------------------------------
-  token :COMENTARIOS, /\(\*.+\*\)|\{.+\}/ do |t|
-  		#t.type = "COMENTARIO"
-    	t.value = t.value  	
-  		#println("SIGNO #{t.value}")
-  		nil
   end 
 
 #--------------------------------------------
@@ -992,16 +996,18 @@ def vertabla()
 	end
 end=#
 
-println("\t************************ COMPILADOR DEL LENGUAJE PASCAL v 0.1 *********************")
-println("\t***********************************************************************************")
-println("\t************************             ALUMNOS:              ************************")
-println("\t***********************************************************************************")
-println("\t******                  ACEVEDO MALDONADO JOSUE                              ******")
-println("\t******                  MORALES MARTINEZ MARIA                               ******")
-println("\t******                  OLIVERA ROSAS LUIS MIGUEL                            ******")
-println("\t******                  PEREZ CARRERA CARLOS FRANCISCO                       ******")
-println("\t******                  RUIZ GONZALEZ ALEXANDER                              ******")
-println("\t***********************************************************************************")
+println("""
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ COMPILADOR DEL LENGUAJE PASCAL v 0.1 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓             ALUMNOS:              ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓▓▓▓▓▓                  ACEVEDO MALDONADO JOSUE                              ▓▓▓▓▓▓
+            ▓▓▓▓▓▓                  MORALES MARTINEZ MARIA                               ▓▓▓▓▓▓
+            ▓▓▓▓▓▓                  OLIVERA ROSAS LUIS MIGUEL                            ▓▓▓▓▓▓
+            ▓▓▓▓▓▓                  PEREZ CARRERA CARLOS FRANCISCO                       ▓▓▓▓▓▓
+            ▓▓▓▓▓▓                  RUIZ GONZALEZ ALEXANDER                              ▓▓▓▓▓▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+        """)
 
 
 
@@ -1011,30 +1017,35 @@ url= url[1:end-2] #quitamos los simbolos /r y /n
 
 #url = C:\Users\Neomatrix\Desktop\pascalero.pas
 
-
-
-# Abre y lee un fichero
-# Se usa un bloque: el fichero se cierra
-# automáticamente al acabar el bloque.
 println("\t\tANALIZADOR LEXICOGRAFICO")
 
+#numlinea = 0
+
+cadenaunica= leer(url)
+
+println(cadenaunica)
 
 
-open(url) do f1
-	cadenaunica = ""
-	numlinea = 0
-	for linea in eachline(f1)
-		if linea != "\n"
-			numlinea += 1
-		  	println("\033[1;32m-->\033[1;37m $linea \033[1;36m")
-		    #analizador(linea)
-		    cadenaunica *= linea
-		    println("\n\033[1;37m")
-		    #vertabla()
-		    println("\033[1;36m")
-		end 
-	end
-end
+#cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t","") 
+cadenaunica= replace(cadenaunica,r"{.+}|\(\*.+\*\)","") #quitando de raiz los comentarios!!!!
+
+println(cadenaunica)
+
+#---------------!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# r = matchall(r"{.+}|\(\*.+\*\)", cade)
+# show(r) #> ["(*Probando Cambios*)","{numero de vueltas que dara el bucle}","(*otro comentario*)"]
+
+# iter = eachmatch(r"{.+}|\(\*.+\*\)", cade)
+# for i in iter
+# println("\"$(i.match)\" ")
+# end
+#>"(*Probando Cambios*)"
+#"{numero de vueltas que dara el bucle}"
+#"(*otro comentario*)"
+#---------------!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 
 #=File.open(url, 'r') do |f1|
   while linea = f1.gets
@@ -1052,9 +1063,9 @@ end
 	end
   end
 end=#
-println("\033[1;37m")
+#println("\033[1;37m")
 
-println("\t\tANALIZADOR SEMANTICO")
+#println("\t\tANALIZADOR SEMANTICO")
 
 #println(cadenaunica)
 
@@ -1064,7 +1075,7 @@ println("\t\tANALIZADOR SEMANTICO")
 =#
 #=semantica(cadenaunica)
 vertabla()=#
-println("\n\tArbol\n")
+#println("\n\tArbol\n")
 #println($salida)
 #println "presione una tecla para continuar..."
 	    #STDOUT.flush  
