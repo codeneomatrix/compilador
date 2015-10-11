@@ -8,7 +8,7 @@ program OtroEjemplo;
 			x:=y; 
 			y:=z; 
 		end; 
-
+		(*Probando otros Cambios*)
 	begin 
 		writeln('Ingrese dos numeros' ); 
 		readln(a,b); 

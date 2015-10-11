@@ -13,21 +13,13 @@ function analizacomentarios(cade)
 con1=0
 con2=0
 
- for i = cade
-  if i == '{'
-      con1+=1
-  end
-  if i == '}'
-      con2+=1
-  end
- end
+ for i=1:length(cade)
 
- for i=1:2:cade[end]
-    if cade[i]=='(' && cade[i+1]=='*'
+    if cade[i]=='(' && cade[i+1]=='*' ||cade[i]=='{'
       con1+=1;
     end
 
-    if cade[i]=='*' && cade[i+1]==')'
+    if cade[i]=='*' && cade[i+1]==')' || cade[i]=='}'
       con2+=1;
     end
  end
@@ -35,7 +27,7 @@ con2=0
  if con1==con2
     return 1
  else
-    println(" \t \033[1;31m ✗ Error lexicografico falta un caracter { o un } \033[1;37m")
+    println(" \t \033[1;31m ✗ Error lexicografico comentario mal escrito falta un caracter {, }, (* o *) \033[1;37m")
     return 0
  end
 end
@@ -1056,11 +1048,12 @@ cadenaunica= leer(url)
 
 println(cadenaunica)
 
- #if analizacomentarios(cadenaunica)==1
-  #cadenaunica= replace(cadenaunica,r"{.+}|\n|\r|\t|\s","")
-  cadenaunica= replace(cadenaunica,r"{.+}|\(\*.+\*\)|//.+","") #quitando de raiz los comentarios!!!!
+ if analizacomentarios(cadenaunica)==1
+  cadenaunica= replace(cadenaunica,r"\(\*.+\*\)|  //(.+|\s|\t)","") #quitando de raiz los comentarios!!!!
+  cadenaunica= replace(cadenaunica,r"{(.+|\s|\n|\r|\t)}","")
+  #cadenaunica= replace(cadenaunica,r"{(.+|\s|\n|\r|\t)}|\n|\r|\t|\s","")
   println(cadenaunica)
-#end
+end
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # r = matchall(r"{.+}|\(\*.+\*\)", cade)
