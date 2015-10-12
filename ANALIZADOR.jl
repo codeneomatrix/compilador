@@ -3,33 +3,32 @@ function leer(url)
   open(url) do f1
     for linea in eachline(f1)
         cadena*= linea
-        #println(linea)
     end
   end
   cadena
 end
 
 function analizacomentarios(cade)
-con1=0
-con2=0
-
+con1=[]
+con2=[]
+res=0
  for i=1:length(cade)
-
     if cade[i]=='(' && cade[i+1]=='*' ||cade[i]=='{'
-      con1+=1;
+      push!(con1, i)
     end
-
-    if cade[i]=='*' && cade[i+1]==')' || cade[i]=='}'
-      con2+=1;
+    if cade[i]=='*' && cade[i+1]==')'
+      push!(con2, i+1)
     end
+    if cade[i]=='}'
+      push!(con2, i)
+    end 
  end
-
- if con1==con2
-    return 1
+ if length(con1)==length(con2)
+    res=1
  else
     println(" \t \033[1;31m ✗ Error lexicografico comentario mal escrito falta un caracter {, }, (* o *) \033[1;37m")
-    return 0
  end
+ res, con1, con2
 end
 
 #=
@@ -958,66 +957,8 @@ rule 'instruccion :
 end
 
 #------------------------------------------------------
-#------------------------------------------------------
-#------------------------------------------------------
-#------------------------------------------------------
 
-# def tablasimbolos(clave,valor)
-# 	tabla[clave]  = valor
-# end
-
-
-def imprimirtabla()
-	puts("posision nombre valor  tipo")
-	salida=""
-	for i in(0..($tabla.length)-1)
-		for j in(0..($tabla[i].length)-1)
-    	salida += "  #{$tabla[i][j]}\t"
-    end
-    	salida+="\n"
-	end
-	puts salida
-end
-
-def semantica(cadena)
-parser = CalcParse.new(CalcLex.new)
-
-puts(parser.parse(cadena,true))
-end
-
-def analizador(cadena)
-lex = CalcLex.new(cadena)
-tipo = ""
-esta = false
-while true
-	tok = lex.next
-	if tok != nil
-		puts "		#{tok.type} #{tok.value}"
-
-         #puts "jajaj k"
-         #puts tabla["#{tok.value}"]
-         #puts "k"
-
-		if ("#{tok.type}" == "IDENTIFICADOR" )#&& tabla["#{tok.value}"]==nil)
-		  $tabla["#{tok.value}"]=[$num,tok.type]
-		  $num=$num+1
-		 end
-
-	end
-	if not tok
-		break
-	end
-end
-
-end
-
-def vertabla()
-	puts "               TABLA DE SIMBOLOS"
-	puts "|         NOMBRE\033[100D \033[21C|         Clase   \033[100D\033[40C|  TIPO   |"
-	$tabla.each do |k, v|
-	  puts "   #{v[0]} \033[100D \033[5C|  #{k}\033[100D\033[22C|  #{v[1]}\033[100D\033[40C|  #{v[2]}"
-	end
-end=#
+=#
 
 println("""
             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ COMPILADOR DEL LENGUAJE PASCAL v 0.1 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
@@ -1038,22 +979,31 @@ println("Url del archivo .pas:")
 url = readline(STDIN)
 url= url[1:end-2] #quitamos los simbolos /r y /n
 
-#url = C:\Users\Neomatrix\Desktop\pascalero.pas
-
 println("\t\tANALIZADOR LEXICOGRAFICO")
-
-#numlinea = 0
-
 cadenaunica= leer(url)
+p,v1,v2 = analizacomentarios(cadenaunica)
 
-println(cadenaunica)
+#print(p,v1,v2)
 
- if analizacomentarios(cadenaunica)==1
-  cadenaunica= replace(cadenaunica,r"\(\*.+\*\)|  //(.+|\s|\t)","") #quitando de raiz los comentarios!!!!
-  cadenaunica= replace(cadenaunica,r"{(.+|\s|\n|\r|\t)}","")
-  #cadenaunica= replace(cadenaunica,r"{(.+|\s|\n|\r|\t)}|\n|\r|\t|\s","")
-  println(cadenaunica)
+#aqui se eliminan los comentarios
+if p==1
+  for i= 1:length(v2)
+    veces=0
+    for j= length(v1):-1:1
+      if 0<v1[j]<v2[i] && veces==0
+        cadenaunica = replace(cadenaunica,cadenaunica[v1[j]:v2[i]],"@"^((v2[i]-v1[j])+1))
+        v1[j]=-1
+        veces=1
+      end 
+    end 
+  end
+
+  cadenaunica= replace(cadenaunica,"@","")
 end
+  cadenaunica= replace(cadenaunica,r"//.+","")
+  println(cadenaunica)
+  cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
+  println(cadenaunica)
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # r = matchall(r"{.+}|\(\*.+\*\)", cade)
@@ -1069,37 +1019,3 @@ end
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
-#=File.open(url, 'r') do |f1|
-  while linea = f1.gets
-  	if linea != "\n"
-  		$numlinea = $numlinea+1
-	  	println "\033[1;32m-->\033[1;37m #{linea}\033[1;36m"
-	    analizador(linea)
-	    cadenaunica += linea
-	    println "\n\033[1;37m"
-	    vertabla()
-	    println "\033[1;36m"
-	    println "presione una tecla para continuar"
-	    STDOUT.flush
-		continuar = gets.chomp
-	end
-  end
-end=#
-#println("\033[1;37m")
-
-#println("\t\tANALIZADOR SEMANTICO")
-
-#println(cadenaunica)
-
-#=println "presione una tecla para continuar..."
-	    STDOUT.flush
-		continuar = gets.chomp
-=#
-#=semantica(cadenaunica)
-vertabla()=#
-#println("\n\tArbol\n")
-#println($salida)
-#println "presione una tecla para continuar..."
-	    #STDOUT.flush
-		#continuar = gets.chomp

@@ -7,8 +7,10 @@ program OtroEjemplo;
 			z:=x; 
 			x:=y; 
 			y:=z; 
-		end; 
-		(*Probando otros Cambios*)
+	end; 
+		(*Probando otros
+		 Cambios*)
+	// comentario de una linea
 	begin 
 		writeln('Ingrese dos numeros' ); 
 		readln(a,b); 
