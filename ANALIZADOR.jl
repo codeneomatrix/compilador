@@ -31,97 +31,45 @@ res=0
  res, con1, con2
 end
 
+
+
+#TABLAS DE SIMBOLOS FIJOS
+##simbolos de operacion
+so= [1 "IGUAL" "="
+     2 "MAS"  "+"
+     3 "MENOS" "-"
+     4 "TIMES" "*"
+     5 "DIV" "DIV"
+     6 "MOD" "MOD"]
+
+#simbolo de asignacion
+sop=[1 "ASIGNACION" ":="]
+
+#simbolos de palabras reservadas
+
+spr=[1 "WRITE" "WRITE"
+     2 "READ" "READ"
+     3 "" ""
+     4 "" ""
+     5 "" ""
+     6 "" ""
+     7 "" ""
+     8 "" ""
+     9 "" ""
+     10 "" ""
+     11 "" ""
+     12 "" ""
+     13 "" ""
+     14 "" ""
+     15 "" ""
+     16 "" ""
+     17 "" ""]
+
 #=
-$tabla={}
-
-$num =0
-$numlinea=0
-$salida=""
-class CalcLex < Rly::Lex
-  ignore " \t\n"
-
- token :CADENA, /'\w(\w|\s|-|!|,|\.|\(|\)|@|#|$|%|&)*'/ do |t|
-  		#t.type = "CADENA DE TEXTO"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-
-#--------------------------------------------
-  token :IGUAL,/\=/ do |t|
-      t.value = t.value
-      t
-  end
-  token :MAS, /\+/ do |t|
-  		##t.type = "SIGNO"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-  token :MENOS, /-/ do |t|
-  		#t.type = "SIGNO"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-  token :TIMES, /\*/ do |t|
-  		#t.type = "SIGNO"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-  token :DIV, /\/|DIV|div/ do |t|
-  		#t.type = "SIGNO"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-
-  token :ASIGNACION, /:=/ do |t|
-  		#t.type = "ASIGNACION"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-  token :MOD, /mod|MOD/ do |t|
-  		#t.type = "ASIGNACION"
-    	t.value = t.value
-  		#println("SIGNO #{t.value}")
-  		t
-  end
-
-  token :NUMBERFLOAT, /\d+\.\d+/ do |t|
-  	#println("NUMERO #{t.value}")
-  	#t.type = "NUMERO FLOTANTE"
-    t.value = t.value
-    t
-  end
-
-  token :NUMBERINT, /\d+/ do |t|
-  	#puts("NUMERO #{t.value}")
-  	##t.type = "NUMERO ENTERO"
-    t.value = t.value.to_i
-    t
-  end
-
 #-----------------------------------------------
 #------------------PALABRAS RESERVADAS----------
 #-----------------------------------------------
 
-
-
-  token :WRITE, /writeln|writeLn|WRITELN|write|WRITE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :READ, /readln|readLn|READLN|read|READ/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
   token :CLOSE, /close|CLOSE/ do |t|
   		#t.type = "PALABRA RESERVADA"
     	t.value = t.value
@@ -493,7 +441,28 @@ class CalcLex < Rly::Lex
   		t
   end
 
+  token :NUMBERFLOAT, /\d+\.\d+/ do |t|
+    #println("NUMERO #{t.value}")
+    #t.type = "NUMERO FLOTANTE"
+    t.value = t.value
+    t
+  end
+
+  token :NUMBERINT, /\d+/ do |t|
+    #puts("NUMERO #{t.value}")
+    ##t.type = "NUMERO ENTERO"
+    t.value = t.value.to_i
+    t
+  end
+
 #------------------------------------------------------
+
+token :CADENA, /'\w(\w|\s|-|!|,|\.|\(|\)|@|#|$|%|&)*'/ do |t|
+      #t.type = "CADENA DE TEXTO"
+      t.value = t.value
+      #println("SIGNO #{t.value}")
+      t
+  end
 
   on_error do |t|
     puts "		\033[1;31m ERROR LINEA #{$numlinea}   CARACTER ILEGAL #{t.value}\033[1;36m"
@@ -1003,6 +972,7 @@ end
   cadenaunica= replace(cadenaunica,r"//.+","")
   println(cadenaunica)
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
+  cadenaunica= uppercase(cadenaunica)
   println(cadenaunica)
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
