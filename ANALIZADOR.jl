@@ -1,3 +1,50 @@
+#ARBOL 1er intento
+#=type nodo{T}
+    izq::T
+    der::T
+    dato :: Int
+end 
+
+    function agregarNodo(dato)
+        # crea un nuevo nodo y lo devuelve
+      nodo(dato)
+    end
+
+    raiz=nothing
+    function insertar(raiz, dato)
+        # inserta un dato nuevo en el árbol
+        if raiz == nothing
+            # si no hay nodos en el árbol lo agrega
+            agregarNodo(dato)
+        else
+            # si hay nodos en el árbol lo recorre
+            if dato <= raiz.dato
+                # si el dato ingresado es  menor que el dato guardado va al subárbol izquierdo
+                raiz.izq = self.insertar(raiz.izq, dato)
+            else:
+                # si no, procesa el subárbol derecho
+                raiz.der = self.insertar(raiz.der, dato)
+              return raiz
+            end
+        end
+    end
+
+    function buscar(raiz, clave)
+      # busca el valor clave dentro del arbol
+      if raiz == nothing
+          print("No se encuentra")
+      else
+          if clave == raiz.dato
+        print("El valor $clave se encuentra en el ABB" )
+          elseif clave < raiz.dato
+              # lado izquierdo
+              return buscar(raiz.izq, clave)
+          else
+             # lado derecho
+             return buscar(raiz.der, clave)
+          end
+      end=#
+
 function leer(url)
   cadena=""
   open(url) do f1
