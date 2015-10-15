@@ -82,357 +82,79 @@ end
 
 #TABLAS DE SIMBOLOS FIJOS
 ##simbolos de operacion
-so= [1 "IGUAL" "="
-     2 "MAS"  "+"
-     3 "MENOS" "-"
-     4 "TIMES" "*"
-     5 "DIV" "DIV"
-     6 "MOD" "MOD"]
+operador= [1 "=" "IGUAL" 
+           2 "+" "MAS" 
+           3 "-" "MENOS" 
+           4 "*" "TIMES" 
+           5 "DIV" "DIV" 
+           6 "MOD"  "MOD"]
 
 #simbolo de asignacion
-sop=[1 "ASIGNACION" ":="]
+asignacion=[1 ":="]
 
 #simbolos de palabras reservadas
 
-spr=[1 "WRITE" "WRITE"
-     2 "READ" "READ"
-     3 "" ""
-     4 "" ""
-     5 "" ""
-     6 "" ""
-     7 "" ""
-     8 "" ""
-     9 "" ""
-     10 "" ""
-     11 "" ""
-     12 "" ""
-     13 "" ""
-     14 "" ""
-     15 "" ""
-     16 "" ""
-     17 "" ""]
-
+#=palabra_reservada=[1 "PROGRAM" 
+                   2 "READ" 
+                   3 "CLOSE" 
+                   4 "ABSOLUTE" 
+                   5 "BEGIN" 
+                   6 "CONST" 
+                   7 "FOR" 
+                   8 "DOWNTO" 
+                   9 "TO" 
+                   10 "CASE" 
+                   11 "IF" 
+                   12 "IN" 
+                   13 "LABEL" 
+                   14 "ELSE" 
+                   15 "END" 
+                   16 "NIL" 
+                   17 "WRITE" 
+                   18 "REPEAT" 
+                   19 "UNIT" 
+                   20 "USES" 
+                   21 "WITH" 
+                   22 "CONSTRUCTOR" 
+                   23 "EXTERNAL" 
+                   24 "DO" 
+                   25 "FILE" 
+                   26 "FORWARD" 
+                   27 "GOTO" 
+                   28 "IMPLEMENTATION" 
+                   29 "INLINE" 
+                   30 "INTERRUPT" 
+                   31 "OF" 
+                   32 "PACKED" 
+                   33 "PROCEDURE" 
+                   34 "RECORD" 
+                   35 "PROCEDURE" 
+                   36 "PROCEDURE" 
+                   37 "PROCEDURE" 
+                   38 "PROCEDURE" 
+                   39 "SET"
+                   40 "SHR"
+                   41 "THEN"
+                   42 "TYPE"
+                   43 "UNTIL"
+                   44 "VAR"
+                   45 "WHILE"
+                   46 "FUNCTION"
+                   47 "NEW"
+                   48 "^" "PUNTERO"
+                   49 ";" "PUNTOYCOMA" 
+                   50 ":" "DOSPUNTOS"]
+=#
 #=
 #-----------------------------------------------
 #------------------PALABRAS RESERVADAS----------
-#-----------------------------------------------
-
-  token :CLOSE, /close|CLOSE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-
-  token :ABSOLUTE, /absolute|ABSOLUTE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
 
 
-  token :BEGIN, /begin|BEGIN/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CONST, /const |CONST / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :FOR, /for |FOR / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :DOWNTO, / downto | DOWNTO / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :TO, / to | TO / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CASE, /case |CASE / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :IF, /if |IF / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :IN, / in | IN / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :LABEL, /label|LABEL/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :ELSE, /else|ELSE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :END, /end|END/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :NIL, /nil|NIL/ do |t|
-      #t.type = "PALABRA RESERVADA"
-      t.value = t.value
-      #puts("SIGNO #{t.value}")
-      t
-  end
-  #----------conjunciones logicas-------
-  token :AND, /and|AND/ do |t|
-  		#t.type = "OPERADOR LOGICO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :OR, /or|OR/ do |t|
-  		#t.type = "OPERADOR LOGICO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :NOT, /not|NOT/ do |t|
-  		#t.type = "OPERADOR LOGICO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :XOR, /xor|XOR/ do |t|
-  		#t.type = "OPERADOR LOGICO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  #-------------------------------------
-  token :PROGRAM, /program|PROGRAM/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :REPEAT, /repeat|REPEAT/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :UNIT, /unit|UNIT/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :USES, /uses|USES/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :WITH, /with|WITH/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CONSTRUCTOR, /constructor|CONSTRUCTOR/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :EXTERNAL, /external|EXTERNAL/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :DO, / do | DO / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :FILE, /file|FILE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :FORWARD, /forward|FORWARD/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :GOTO, /goto|GOTO/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :IMPLEMENTATION, /implementation|IMPLEMENTATION/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :INLINE, /inline|INLINE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :INTERRUPT, /interrupt|INTERRUPT/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :OF, /of|OF/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PACKED, /packed|PACKED/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PROCEDURE, /procedure|PROCEDURE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :RECORD, /record|RECORD/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :SET, /set|SET/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :SHR, /shr|SHR/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :THEN, /then|THEN/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :TYPE, /type|TYPE/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :UNTIL, /until|UNTIL/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :VAR, /var|VAR/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :WHILE, /while |WHILE / do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :FUNCTION, /function|FUNCTION/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :NEW, /new|NEW/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-#-----------------TIPOS------------------------------------
-#----------------------------------------------------------
-  token :INDICADORDETIPO, /integer|INTEGER|byte|BYTE|shortint|SHORTINT|word|WORD|longint|LONGINT|real|REAL|char|CHAR|string|STRING|boolean|BOOLEAN|Text|text|array|ARRAY/ do |t|
-  		#t.type = "PALABRA RESERVADA"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-#------------------------------------------------------
-  token :TRUE, /true|TRUE/ do |t|
-  		#t.type = "BOOLEANO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :FALSE, /false|FALSE/ do |t|
-  		#t.type = "BOOLEANO"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
+
+
 
 #-----------------------------------------------------
-  token :PUNTERO, /\^/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PUNTOYCOMA, /;/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :DOSPUNTOS, /:/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
+
   token :COMA, /,/ do |t|
   		#t.type = "SIMBOLO TERMINAL"
     	t.value = t.value
@@ -469,6 +191,7 @@ spr=[1 "WRITE" "WRITE"
   		#puts("SIGNO #{t.value}")
   		t
   end
+
 
 #-----------------OPERACION DE RELACION----------------------------------------
 #------------------------------------------------------------------------------
@@ -1023,16 +746,15 @@ end
   println(cadenaunica)
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
 
-# r = matchall(r"{.+}|\(\*.+\*\)", cade)
-# show(r) #> ["(*Probando Cambios*)","{numero de vueltas que dara el bucle}","(*otro comentario*)"]
+identificador = "(\\w(\\w|_)*|_(\\w|_)*)"
+INDICADORDETIPO="(INTEGER|BYTE|SHORTINT|WORD|LONGINT|REAL|CHAR|STRING|BOOLEAN|TEXT|ARRAY)"
 
-# iter = eachmatch(r"{.+}|\(\*.+\*\)", cade)
-# for i in iter
-# println("\"$(i.match)\" ")
-# end
-#>"(*Probando Cambios*)"
-#"{numero de vueltas que dara el bucle}"
-#"(*otro comentario*)"
-#---------------!!!!!!!!!!!!!!!!!!!!!!!!!
+declaravariable="VAR($identificador|,)+:$INDICADORDETIPO;"
 
+ SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
 
+print(" estas son las variables: \n") 
+for i= SIMBOL
+  t = replace(i,r"VAR","")
+  print("\t$t\n")
+end

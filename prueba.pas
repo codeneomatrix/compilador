@@ -3,6 +3,7 @@ program OtroEjemplo;
 	(*Probando Cambios*)
 	procedure Cambio(x,y : integer) 
 		var z:integer; 
+		var x:real; 
 		begin 
 			z:=x; 
 			x:=y; 
