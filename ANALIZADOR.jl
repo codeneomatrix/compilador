@@ -58,28 +58,27 @@ function leer(url)
 end
 
 function analizacomentarios(cade)
-con1=[]
-con2=[]
-res=0
- for i=1:length(cade)
-    if cade[i]=='(' && cade[i+1]=='*' ||cade[i]=='{'
-      push!(con1, i)
-    end
-    if cade[i]=='*' && cade[i+1]==')'
-      push!(con2, i+1)
-    end
-    if cade[i]=='}'
-      push!(con2, i)
-    end 
- end
- if length(con1)==length(con2)
-    res=1
- else
-    println(" \t \033[1;31m $errorlex comentario mal escrito falta un caracter *),(*,{ o }  \033[1;37m")
- end
- res, con1, con2
+  con1=[]
+  con2=[]
+  res=0
+  for i=1:length(cade)
+      if cade[i]=='(' && cade[i+1]=='*' ||cade[i]=='{'
+        push!(con1, i)
+      end
+      if cade[i]=='*' && cade[i+1]==')'
+        push!(con2, i+1)
+      end
+      if cade[i]=='}'
+        push!(con2, i)
+      end 
+  end
+  if length(con1)==length(con2)
+      res=1
+  else
+      println(" \t \033[1;31m $errorlex comentario mal escrito falta un caracter *),(*,{ o }  \033[1;37m")
+  end
+  res, con1, con2
 end
-
 
 #------------------------------------------------------------------------------------------------------
 #TABLAS DE SIMBOLOS FIJOS
@@ -176,13 +175,10 @@ indicador_tipo=[1 "INTEGER"
 
 IDENTIFICADOR = "(\\w(\\w|_)*|_(\\w|_)*)"
 INDICADORDETIPO="(INTEGER|BYTE|SHORTINT|WORD|LONGINT|REAL|CHAR|STRING|BOOLEAN|TEXT|ARRAY)"
-
 declaravariable="VAR($IDENTIFICADOR|,)+:$INDICADORDETIPO;"
-
 NUMBERFLOAT= "(\\d+\\.\\d+)"
 NUMBERINT="(\\d+)"
 CADENA = "('\\w(\\w|\\s|-|!|,|\\.|\\(|\\)|@|#|\$|%|&)*')"
-
 on_error = "$errorlex: CARACTER ILEGAL"
 
 #=
@@ -344,14 +340,9 @@ instruccion ="$IDENTIFICADOR PARENTESISA salida PARENTESISC
                | $IDENTIFICADOR"
   numero ="$NUMBERINT
            | $NUMBERFLOAT"
-
-#------------------------------------------------------
-
 =#
 
-
 function elemento_posision(ele)
-
   for i=1:size(operador,1)
     if operador[i,2]==ele
       return "operador", i
@@ -418,8 +409,6 @@ println("""
             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
         """)
 
-
-
 println("Url del archivo .pas:")
 url = readline(STDIN)
 url= url[1:end-2] #quitamos los simbolos /r y /n
@@ -452,15 +441,12 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
 
   for i = 1:length(lineas)
     lineas[i]= replace(lineas[i],r"\n|\r","")
-    print("$i:")
-
     if lineas[i]!=""
+      print("=>")
       analizador(lineas[i])
-    else
-      println("")
     end
-
   end
+
   println("\n",cadenaunica)
 
 #---------ubicando los elementos(tokens)----------------
@@ -468,7 +454,6 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   ti, pos= elemento_posision(".")
   println("($ti,$pos)=>",posision_elemento(ti,pos))
 
-  
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
  #=SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
 print("estas son las variables: \n") 
@@ -476,5 +461,4 @@ for i= SIMBOL
   t = replace(i,r"VAR","")
   print("\t$t\n")
 end=#
-
 end
