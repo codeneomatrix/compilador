@@ -83,6 +83,7 @@ end
 
 #------------------------------------------------------------------------------------------------------
 #TABLAS DE SIMBOLOS FIJOS
+
 operador=[1 "="    
           2 "+"    
           3 "-"    
@@ -349,18 +350,46 @@ instruccion ="$IDENTIFICADOR PARENTESISA salida PARENTESISC
 
 
 function elemento_posision(ele)
-  posision=0
+
+  for i=1:size(operador,1)
+    if operador[i,2]==ele
+      return "operador", i
+    end
+  end
+
+  for i=1:size(asignacion,1)
+    if asignacion[i,2]==ele
+      return "asignacion", i
+    end
+  end
+
+  for i=1:size(palabra_reservada,1)
+    if palabra_reservada[i,2]==ele
+      return "palabra_reservada", i
+    end
+  end
+
+  for i=1:size(operador_logico,1)
+    if operador_logico[i,2]==ele
+      return "operador_logico", i
+    end
+  end
+
+  for i=1:size(indicador_tipo,1)
+    if indicador_tipo[i,2]==ele
+      return "indicador_tipo", i
+    end
+  end
 
 end
 
-function posision_elemento()
-
+function posision_elemento(nombret,pos)
+  return eval(parse("$nombret[$pos,2]"))
 end
 
 function analizador(cadena)
   println("$cadena")
-
-
+  
 end
 
 println("""
@@ -420,6 +449,12 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
 
   end
   println(cadenaunica)
+
+#---------ubicando los elementos(tokens)----------------
+  println("ubicando los elementos(tokens)")
+  ti, pos= elemento_posision("+")
+  println("($ti,$pos)=>",posision_elemento(ti,pos))
+
   
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
  #=SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
