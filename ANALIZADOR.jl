@@ -182,61 +182,62 @@ CADENA = "('\\w(\\w|\\s|-|!|,|\\.|\\(|\\)|@|#|\$|%|&)*')"
 on_error = "$errorlex: CARACTER ILEGAL"
 
 #=
-  statement ="programa"
+  S ="programa"
 
   programa ="encabezado bloque ."
 
-  encabezado ="PROGRAM $IDENTIFICADOR;"
-  encabezado ="PROGRAM $IDENTIFICADOR PARENTESISA listaident PARENTESISC;"
+  encabezado ="PROGRAM $IDENTIFICADOR;
+              |PROGRAM $IDENTIFICADOR \\( listaident \\);"
+
   bloque ="declaraciones enunciados"
- declaraciones="LABEL declaraetiqueta| CONST declaraconstantes
-             | TYPE declaratipos"
- declaraciones="
-               LABEL declaraetiqueta declaraciones
+
+  declaraciones="LABEL declaraetiqueta| CONST declaraconstantes
+             | TYPE declaratipos
+             | LABEL declaraetiqueta declaraciones
              | CONST declaraconstantes declaraciones
              | TYPE declaratipos declaraciones
              | VAR declaracion_variable;
              | VAR declaravariables;
              | FUNCTION declarafunciones;
-             | PROCEDURE declaraprocemientos;"
+             | PROCEDURE declaraprocemientos;
+             | VAR declaracion_variable; declaraciones
+             | VAR declaravariables; declaraciones
+             | PROCEDURE declaraprocemientos; declaraciones
+             | FUNCTION declarafunciones; declaraciones"
 
-declaraciones=" VAR declaracion_variable; declaraciones
-                    | VAR declaravariables; declaraciones
-                    | PROCEDURE declaraprocemientos; declaraciones
-                    | FUNCTION declarafunciones; declaraciones"
+  declaracion_variable ="declaravariables; declaravariables"
 
-   declaracion_variable ="declaravariables; declaravariables"
-   declaravariables ="identificadorv : $INDICADORDETIPO
+  declaravariables ="identificadorv : $INDICADORDETIPO
                 | identificadorv : $IDENTIFICADOR "
-    identificadorv ="$IDENTIFICADOR"
-   identificadorv ="identificadorv , identificadorv "
-   declaraetiqueta ="identificadorv  "
 
-   declaratipos ="$IDENTIFICADOR = $INDICADORDETIPO;"
+  identificadorv ="$IDENTIFICADOR
+                    |identificadorv , identificadorv "
 
-    declaratipos =" $IDENTIFICADOR = $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC;"
+  declaraetiqueta ="identificadorv  "
 
-  declaratipos =" $IDENTIFICADOR = RECORD secuenciaenun END;"
-  declaratipos ="$IDENTIFICADOR = $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $INDICADORDETIPO;"
-   rango ="$CADENA . . $CADENA
+  declaratipos ="$IDENTIFICADOR = $INDICADORDETIPO;
+                  |$IDENTIFICADOR = $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC;
+                  |$IDENTIFICADOR = RECORD secuenciaenun END;
+                  |$IDENTIFICADOR = $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $INDICADORDETIPO;"
+
+  rango ="$CADENA . . $CADENA
           | numero . . numero "
 
-   declaraconstantes ="$IDENTIFICADOR ASIGNACION $IDENTIFICADOR
+  declaraconstantes ="$IDENTIFICADOR ASIGNACION $IDENTIFICADOR
                   | $IDENTIFICADOR ASIGNACION expresion
                   | $IDENTIFICADOR ASIGNACION $CADENA "
 
-
-   declarafunciones ="$IDENTIFICADOR PARENTESISA declaravariables PARENTESISC : $INDICADORDETIPO bloque "
- 
-   declaraprocemientos ="$IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque"
-declaraprocemientos ="$IDENTIFICADOR PARENTESISA VAR declaravariables PARENTESISC bloque "
+  declarafunciones ="$IDENTIFICADOR \\( declaravariables \\) : $INDICADORDETIPO bloque "
+  
+  declaraprocemientos ="$IDENTIFICADOR \\( declaravariables \\) bloque
+                        |$IDENTIFICADOR \\( VAR declaravariables \\) bloque "
 
   listaident ="$IDENTIFICADOR , $IDENTIFICADOR"
 
   enunciados ="BEGIN secuenciaenun END"
 
   secuenciaenun ="enunciado ; secuenciaenun
-              |enunciado;"
+                 |enunciado;"
 
   enunciado ="instruccion
             | if
@@ -244,100 +245,77 @@ declaraprocemientos ="$IDENTIFICADOR PARENTESISA VAR declaravariables PARENTESIS
             | case
             | for"
 
-  for="FOR $IDENTIFICADOR ASIGNACION expresion TO expresion DO enunciados
+  for="    FOR $IDENTIFICADOR ASIGNACION expresion TO expresion DO enunciados
          | FOR $IDENTIFICADOR ASIGNACION expresion TO expresion DO instruccion
          | FOR $IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO enunciados
          | FOR $IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO instruccion"
 
-  if="
-          IF expresionlogica THEN enunciados
-        | IF expresionlogica THEN instruccion"
-
-   if="
-          IF expresionlogica THEN enunciados ELSE enunciados
+  if="    IF expresionlogica THEN enunciados
+        | IF expresionlogica THEN instruccion
+        | IF expresionlogica THEN enunciados ELSE enunciados
         | IF expresionlogica THEN instruccion ELSE instruccion"
 
-  while="WHILE expresionlogica DO enunciados
+  while="    WHILE expresionlogica DO enunciados
            | WHILE expresionlogica DO instruccion"
 
-  case="CASE expresion OF elementos END"
-
-  case="CASE expresion OF elementos; END "
+  case="CASE expresion OF elementos END
+       |CASE expresion OF elementos; END "
 
   elementos="elementos; elementos
            | cadenas : instruccion
            | numero : instruccion"
 
-  cadenas="$CADENA"
+  cadenas="$CADENA|cadenas , cadenas"
 
- cadenas="cadenas , cadenas"
-
-  expresionlogica="
-         expresion OPERADORLOGICO expresion
+  expresionlogica="expresion OPERADORLOGICO expresion
         |expresion = expresion"
 
   salida ="identificadores
           | $CADENA
           | $NUMBERINT
           | $NUMBERFLOAT
-          | expresion"
- salida ="salida , salida"
+          | expresion
+          |salida , salida"
 
   identificadores ="
-        $IDENTIFICADOR"
-
-  identificadores ="identificadores , identificadores
-          | identificadores . identificadores"
+        $IDENTIFICADOR
+        |identificadores , identificadores
+        | identificadores . identificadores"
 
   instruccion ="expresion
-            | instruccion"
-
-  instruccion ="$IDENTIFICADOR ASIGNACION rango
+            | instruccion|$IDENTIFICADOR ASIGNACION rango
             | $IDENTIFICADOR ASIGNACION $IDENTIFICADOR
             | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO
             | identificadores ASIGNACION $INDICADORDETIPO
-            | $IDENTIFICADOR ASIGNACION expresion"
-
-instruccion ="$IDENTIFICADOR PARENTESISA salida PARENTESISC
-            | WRITE PARENTESISA salida PARENTESISC
-            | READ PARENTESISA identificadores PARENTESISC"
-
-  instruccion ="$IDENTIFICADOR ASIGNACION RECORD secuenciaenun END
+            | $IDENTIFICADOR ASIGNACION expresion|$IDENTIFICADOR \\( salida \\)
+            | WRITE \\( salida \\)
+            | READ \\( identificadores \\)|$IDENTIFICADOR ASIGNACION RECORD secuenciaenun END
             | $IDENTIFICADOR ASIGNACION FILE OF $IDENTIFICADOR
-            | $IDENTIFICADOR ASIGNACION FILE OF $INDICADORDETIPO"
-
-  instruccion ="
-          $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC"
-  instruccion ="$IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC OF $IDENTIFICADOR
+            | $IDENTIFICADOR ASIGNACION FILE OF $INDICADORDETIPO
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC OF $IDENTIFICADOR
             | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $IDENTIFICADOR
             | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC OF $INDICADORDETIPO
             | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $INDICADORDETIPO"
 
-  expresion ="
-      termino"
+  expresion ="termino
+            | termino MAS expresion
+            | termino MENOS expresion
+            | \\( termino \\)
+            | \\( termino MAS expresion  \\)
+            | \\( termino MENOS expresion \\)"
 
-
-  expresion ="
-      termino MAS expresion
-    | termino MENOS expresion
-    | PARENTESISA termino PARENTESISC"
-
-  expresion ="
-      PARENTESISA termino MAS expresion  PARENTESISC
-    | PARENTESISA termino MENOS expresion PARENTESISC"
-
-  termino ="factor"
-
-  termino ="PARENTESISA factor PARENTESISC
+  termino ="factor
+            |\\( factor \\)
             | termino TIMES factor
-            | termino DIV factor"
-
-  termino ="PARENTESISA termino TIMES factor PARENTESISC
-            | PARENTESISA termino DIV factor PARENTESISC
-            |  PARENTESISA termino MOD factor PARENTESISC"
+            | termino DIV factor
+            | \\( termino TIMES factor \\)
+            | \\( termino DIV factor \\)
+            | \\( termino MOD factor \\)"
 
   factor ="numero
-               | $IDENTIFICADOR"
+            | $IDENTIFICADOR"
+
   numero ="$NUMBERINT
            | $NUMBERFLOAT"
 =#
