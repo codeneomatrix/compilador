@@ -35,7 +35,7 @@ end
           print("No se encuentra")
       else
           if clave == raiz.dato
-        print("El valor $clave se encuentra en el ABB" )
+        print("El valor $clave se encuentra en el ABB")
           elseif clave < raiz.dato
               # lado izquierdo
               return buscar(raiz.izq, clave)
@@ -44,6 +44,8 @@ end
              return buscar(raiz.der, clave)
           end
       end=#
+#------------------------------------------------------------------------------------------------------
+errorlex= "✗ Error lexicografico:"
 
 function leer(url)
   cadena=""
@@ -73,28 +75,27 @@ res=0
  if length(con1)==length(con2)
     res=1
  else
-    println(" \t \033[1;31m ✗ Error lexicografico comentario mal escrito falta un caracter {, }, (* o *) \033[1;37m")
+    println(" \t \033[1;31m $errorlex comentario mal escrito falta un caracter *),(*,{ o }  \033[1;37m")
  end
  res, con1, con2
 end
 
 
-
+#------------------------------------------------------------------------------------------------------
 #TABLAS DE SIMBOLOS FIJOS
-##simbolos de operacion
-operador= [1 "=" "IGUAL" 
-           2 "+" "MAS" 
-           3 "-" "MENOS" 
-           4 "*" "TIMES" 
-           5 "DIV" "DIV" 
-           6 "MOD"  "MOD"]
+operador=[1 "="    
+          2 "+"    
+          3 "-"    
+          4 "*"    
+          5 "DIV"  
+          6 "MOD" ]
 
-#simbolo de asignacion
+#operador=Dict("="=>1, "+"=>2, "-"=>3, "*"=>4, "DIV"=>5, "MOD"=>6)
+## uso operador["+"]
+
 asignacion=[1 ":="]
 
-#simbolos de palabras reservadas
-
-#=palabra_reservada=[1 "PROGRAM" 
+palabra_reservada=[1 "PROGRAM" 
                    2 "READ" 
                    3 "CLOSE" 
                    4 "ABSOLUTE" 
@@ -141,568 +142,231 @@ asignacion=[1 ":="]
                    45 "WHILE"
                    46 "FUNCTION"
                    47 "NEW"
-                   48 "^" "PUNTERO"
-                   49 ";" "PUNTOYCOMA" 
-                   50 ":" "DOSPUNTOS"]
-=#
+                   48 "^" 
+                   49 ";"  
+                   50 ":"
+                   51 ","
+                   52 "("
+                   53 ")" 
+                   54 "["
+                   55 "]"
+                   56 "."]
+
+operador_logico=[1 "¬="
+                 2 "<>"
+                 3 ">="
+                 4 "<="
+                 5 "<"
+                 6 ">" ]
+
+indicador_tipo=[1 "INTEGER"
+                2 "BYTE"
+                3 "SHORTINT"
+                4 "WORD"
+                5 "LONGINT"
+                6 "REAL"
+                7 "CHAR"
+                8 "STRING"
+                9 "BOOLEAN"
+                10 "TEXT"
+                11 "ARRAY"]
+#------------------------------------------------------------------------------------------------------
+
+IDENTIFICADOR = "(\\w(\\w|_)*|_(\\w|_)*)"
+INDICADORDETIPO="(INTEGER|BYTE|SHORTINT|WORD|LONGINT|REAL|CHAR|STRING|BOOLEAN|TEXT|ARRAY)"
+
+declaravariable="VAR($IDENTIFICADOR|,)+:$INDICADORDETIPO;"
+
+NUMBERFLOAT= "(\\d+\\.\\d+)"
+NUMBERINT="(\\d+)"
+CADENA = "('\\w(\\w|\\s|-|!|,|\\.|\\(|\\)|@|#|\$|%|&)*')"
+
+on_error = "$errorlex: CARACTER ILEGAL"
+
 #=
-#-----------------------------------------------
-#------------------PALABRAS RESERVADAS----------
+  statement ="programa"
 
+  programa ="encabezado bloque ."
 
-
-
-
-#-----------------------------------------------------
-
-  token :COMA, /,/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PARENTESISA, /\(/ do |t|
-  		#t.type = "DELIMITADOR"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PARENTESISC, /\)/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CORCHETEA, /\[/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :CORCHETEC, /\]/ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-  token :PUNTO, /\./ do |t|
-  		#t.type = "SIMBOLO TERMINAL"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-
-
-#-----------------OPERACION DE RELACION----------------------------------------
-#------------------------------------------------------------------------------
-  token :OPERADORLOGICO, /¬=|<>|>=|<=|<|>/ do |t|
-  		#t.type = "OPERADOR DE RELACION"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-
-  token :IDENTIFICADOR, /\w(\w|_)*|_(\w|_)*/ do |t|
-  		#t.type = "IDENTIFICADOR"
-    	t.value = t.value
-  		#puts("SIGNO #{t.value}")
-  		t
-  end
-
-  token :NUMBERFLOAT, /\d+\.\d+/ do |t|
-    #println("NUMERO #{t.value}")
-    #t.type = "NUMERO FLOTANTE"
-    t.value = t.value
-    t
-  end
-
-  token :NUMBERINT, /\d+/ do |t|
-    #puts("NUMERO #{t.value}")
-    ##t.type = "NUMERO ENTERO"
-    t.value = t.value.to_i
-    t
-  end
-
-#------------------------------------------------------
-
-token :CADENA, /'\w(\w|\s|-|!|,|\.|\(|\)|@|#|$|%|&)*'/ do |t|
-      #t.type = "CADENA DE TEXTO"
-      t.value = t.value
-      #println("SIGNO #{t.value}")
-      t
-  end
-
-  on_error do |t|
-    puts "		\033[1;31m ERROR LINEA #{$numlinea}   CARACTER ILEGAL #{t.value}\033[1;36m"
-    t.lexer.pos += 1
-    nil
-  end
-end
-
-#------------------------------------------------------
-#------------------------------------------------------
-#------------------------------------------------------
-#------------------------------------------------------
-
-
-
-class CalcParse < Rly::Yacc
-
-	precedence :left,  '+', '-'
-	precedence :left,  '*', '/'
-
-  rule 'statement : programa' do |st, pro|
-    st.value = pro.value
-  end
-
-  rule 'programa : encabezado bloque PUNTO' do |pro, enca, blo, o|
-    pro.value = blo.value
-    #$tabla[enca.value]= blo.value
-    $salida+="\n\t|\t|\t|\n\t   #{enca.value}\n"
-  end
-
-  #############################################################################################################################
-  rule 'encabezado :PROGRAM IDENTIFICADOR PUNTOYCOMA' do |enca,pro,ide,pyc|
-    #puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{enca.value}"
-    enca.value = ide.value
-    #$tabla[identifi.value]= listaiden.value
-
-      $tabla["#{enca.value}"][2]=ide.value
-
-  end
-
-#############################################################################################################################
-  rule 'encabezado :PROGRAM IDENTIFICADOR PARENTESISA listaident PARENTESISC PUNTOYCOMA' do |enca,pro,ide,pA,listaiden,pC,pyc|
-    #puts "ESTE ES EL NOMBRE DEL PROGRAMA:  #{enca.value}"
-    enca.value = pro.value
-    #$tabla[identifi.value]= listaiden.value
-
-      $tabla["#{enca.value}"][2]=pro.value
-
-  end
-
-  rule 'bloque : declaraciones enunciados' do |blo, decla, enun|
-    blo.value = enun.value
-  end
-
-#############################################################################################################################
- rule 'declaraciones:
-               LABEL declaraetiqueta
-             | CONST declaraconstantes
-             | TYPE declaratipos' do |decla,lct,declarlct|
-     decla.value = lct.value
-     #$tabla[declar.value]= puntoyc.value
-     #puts("\n\n#{puntoyc.value}")
-     #puts("aqui procedimiento, label funtion etc")
-
-        $tabla["#{lct.value}"][1]=declar.value
-
-   end
-
-#############################################################################################################################
- rule 'declaraciones:
+  encabezado ="PROGRAM $IDENTIFICADOR;"
+  encabezado ="PROGRAM $IDENTIFICADOR PARENTESISA listaident PARENTESISC;"
+  bloque ="declaraciones enunciados"
+ declaraciones="LABEL declaraetiqueta| CONST declaraconstantes
+             | TYPE declaratipos"
+ declaraciones="
                LABEL declaraetiqueta declaraciones
              | CONST declaraconstantes declaraciones
              | TYPE declaratipos declaraciones
-             | VAR declaracion_variable PUNTOYCOMA
-             | VAR declaravariables PUNTOYCOMA
-             | FUNCTION declarafunciones PUNTOYCOMA
-             | PROCEDURE declaraprocemientos PUNTOYCOMA' do |decla,lctvfp,declar,pycodecl|
-     decla.value = lctvfp.value
-     #$tabla[declar.value]= puntoyc.value
-     #puts("\n\n#{puntoyc.value}")
-     #puts("aqui procedimiento, label funtion etc")
+             | VAR declaracion_variable;
+             | VAR declaravariables;
+             | FUNCTION declarafunciones;
+             | PROCEDURE declaraprocemientos;"
 
-        $tabla["#{declar.value}"][1]=decla.value
+declaraciones=" VAR declaracion_variable; declaraciones
+                    | VAR declaravariables; declaraciones
+                    | PROCEDURE declaraprocemientos; declaraciones
+                    | FUNCTION declarafunciones; declaraciones"
 
-   end
+   declaracion_variable ="declaravariables; declaravariables"
+   declaravariables ="identificadorv : $INDICADORDETIPO
+                | identificadorv : $IDENTIFICADOR "
+    identificadorv ="$IDENTIFICADOR"
+   identificadorv ="identificadorv , identificadorv "
+   declaraetiqueta ="identificadorv  "
 
+   declaratipos ="$IDENTIFICADOR = $INDICADORDETIPO;"
 
-rule 'declaraciones:  VAR declaracion_variable PUNTOYCOMA declaraciones
-                    | VAR declaravariables PUNTOYCOMA declaraciones
-                    | PROCEDURE declaraprocemientos PUNTOYCOMA declaraciones
-                    | FUNCTION declarafunciones PUNTOYCOMA declaraciones' do |decla,varPrdFtn,dvpf,pyc,declars|
-     decla.value = varPrdFtn.value
-     #$tabla[declar.value]= puntoyc.value
-     #puts("\n\n#{puntoyc.value}")
-     #puts("aqui procedimiento, label funtion etc")
+    declaratipos =" $IDENTIFICADOR = $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC;"
 
-        $tabla["#{dvpf.value}"][1]=varPrdFtn.value
+  declaratipos =" $IDENTIFICADOR = RECORD secuenciaenun END;"
+  declaratipos ="$IDENTIFICADOR = $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $INDICADORDETIPO;"
+   rango ="$CADENA . . $CADENA
+          | numero . . numero "
 
-   end
-
-################################################################################################################################
-   rule 'declaracion_variable :declaravariables PUNTOYCOMA declaravariables' do |declav,declavar,pyc,declava|
-     declav.value = declavar.value
-   end
+   declaraconstantes ="$IDENTIFICADOR ASIGNACION $IDENTIFICADOR
+                  | $IDENTIFICADOR ASIGNACION expresion
+                  | $IDENTIFICADOR ASIGNACION $CADENA "
 
 
-   rule 'declaravariables :identificadorv DOSPUNTOS INDICADORDETIPO
-                | identificadorv DOSPUNTOS IDENTIFICADOR ' do |decla, inde,o,u|
-     decla.value = inde.value
-     #puts($tabla)
-     #puts("aqui tipos")
-     ##$tabla[inde.value]= u.value
+   declarafunciones ="$IDENTIFICADOR PARENTESISA declaravariables PARENTESISC : $INDICADORDETIPO bloque "
+ 
+   declaraprocemientos ="$IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque"
+declaraprocemientos ="$IDENTIFICADOR PARENTESISA VAR declaravariables PARENTESISC bloque "
 
-      $tabla["#{decla.value}"][2]=u.value
-   end
-################################################################################################################################
-    rule 'identificadorv : IDENTIFICADOR' do |identiV,identi|
-     identiV.value = identi.value
-   end
+  listaident ="$IDENTIFICADOR , $IDENTIFICADOR"
 
-################################################################################################################################
-   rule 'identificadorv : identificadorv COMA identificadorv ' do |ideV,iden,coma,ind|
-     ideV.value = iden.value
-   end
+  enunciados ="BEGIN secuenciaenun END"
 
+  secuenciaenun ="enunciado ; secuenciaenun
+              |enunciado;"
 
-   rule 'declaraetiqueta : identificadorv  ' do |decla,iden|
-     decla.value = iden.value
-   end
-
-###################################################################################################################################
-   rule 'declaratipos :IDENTIFICADOR IGUAL INDICADORDETIPO PUNTOYCOMA' do |decla,ident,igu,idtip,pyc|
-     decla.value = ident.value
-   end
-
-###################################################################################################################################
- rule 'declaratipos :  IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC PUNTOYCOMA' do |decla,ident,igu,inditip,ca,num,cc,pyc|
-     decla.value = ident.value
-   end
-####################################################################################################################################
-
-rule 'declaratipos :  IDENTIFICADOR IGUAL RECORD secuenciaenun END PUNTOYCOMA' do |decla,ident,igu,rec,secEnun,fin,pyc|
-     decla.value = ident.value
-   end
-####################################################################################################################################
-rule 'declaratipos : IDENTIFICADOR IGUAL INDICADORDETIPO CORCHETEA rango CORCHETEC OF INDICADORDETIPO PUNTOYCOMA' do |decla,ident,igu,inditip,ca,ran,cc,of,indti,pyc|
-    decla.value = ident.value
-   end
-
-####################################################################################################################################
-   rule 'rango : CADENA PUNTO PUNTO CADENA
-          | numero PUNTO PUNTO numero ' do |rang,cadNum,pun,punt,cadeNu|
-     rang.value = cadNum.value
-   end
-
-###################################################################################################################################
-   rule 'declaraconstantes :IDENTIFICADOR ASIGNACION IDENTIFICADOR
-                  | IDENTIFICADOR ASIGNACION expresion
-                  | IDENTIFICADOR ASIGNACION CADENA ' do |declaCns,ident,asig, idexca|
-     declaCns.value = ident.value
-     #$tabla[decla.value]= cad.value
-   end
-
-###################################################################################################################################
-   rule 'declarafunciones : IDENTIFICADOR PARENTESISA declaravariables PARENTESISC DOSPUNTOS INDICADORDETIPO bloque ' do |declaFun,ident,pa,declavar,pc,pun,inditip,bloq|
-     declaFun.value = ident.value
-   end
-
-########################################################################################################################################
-   rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA declaravariables PARENTESISC bloque' do |declaPro,ident,pa,declaV,pc,blo|
-     declaPro.value = ident.value
-    end
-
-########################################################################################################################################
-rule 'declaraprocemientos :IDENTIFICADOR PARENTESISA VAR declaravariables PARENTESISC bloque ' do |declaPro,ident,pa,var,declaVar,pc,bloq|
-     declaPro.value = ident.value
-    end
-
-########################################################################################################################################
-  rule 'listaident : IDENTIFICADOR COMA IDENTIFICADOR' do |lis,ident,coma,iden|
-    lis.value = ident.value
-  end
-
-########################################################################################################################################
-  rule 'enunciados : BEGIN secuenciaenun END' do |enun,begi,secuenci,fin|
-    enun.value = begi.value
-  end
-
-
-##########################################################################################################################################
-  rule 'secuenciaenun :enunciado PUNTOYCOMA secuenciaenun
-              |enunciado PUNTOYCOMA' do |blo,inst|
-    blo.value = inst.value
-  end
-
-
-  rule 'enunciado : instruccion
+  enunciado ="instruccion
             | if
             | while
             | case
-            | for' do |blo, ins|
-    blo.value = ins.value
-  end
+            | for"
 
-#########################################################################################################################################
+  for="FOR $IDENTIFICADOR ASIGNACION expresion TO expresion DO enunciados
+         | FOR $IDENTIFICADOR ASIGNACION expresion TO expresion DO instruccion
+         | FOR $IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO enunciados
+         | FOR $IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO instruccion"
 
-  rule 'for:
-           FOR IDENTIFICADOR ASIGNACION expresion TO expresion DO enunciados
-         | FOR IDENTIFICADOR ASIGNACION expresion TO expresion DO instruccion
-         | FOR IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO enunciados
-         | FOR IDENTIFICADOR ASIGNACION expresion DOWNTO expresion DO instruccion' do |para,fo,identi,asig,exp,todown, expr,has,enunins|
-    para.value = fo.value
-  end
-
-##########################################################################################################################################
-
-  rule 'if:
+  if="
           IF expresionlogica THEN enunciados
-        | IF expresionlogica THEN instruccion' do |si,sif,expLog,entonces,enunins|
-    si.value = sif.value
-  end
+        | IF expresionlogica THEN instruccion"
 
-#########################################################################################################################################
-   rule 'if:
+   if="
           IF expresionlogica THEN enunciados ELSE enunciados
-        | IF expresionlogica THEN instruccion ELSE instruccion' do |si,sif,expLog,entons,enunins,sinom, enuns|
-  si.value = sif.value
-  end
+        | IF expresionlogica THEN instruccion ELSE instruccion"
 
-##########################################################################################################################################
-  rule 'while:
-            WHILE expresionlogica DO enunciados
-           | WHILE expresionlogica DO instruccion' do |mientras,ins,explog,has, enuins|
-    mientras.value = ins.value
-  end
+  while="WHILE expresionlogica DO enunciados
+           | WHILE expresionlogica DO instruccion"
 
+  case="CASE expresion OF elementos END"
 
-############################################################################################################################################
-  rule 'case:
-            CASE expresion OF elementos END' do |caso,cas,exp,de,ele,fin|
-    caso.value = cas.value
-  end
+  case="CASE expresion OF elementos; END "
 
-##############################################################################################################################################
-  rule 'case:
-           CASE expresion OF elementos PUNTOYCOMA END ' do |caso,casi,expre,de,elem,pyc,fin|
-    caso.value = casi.value
-  end
+  elementos="elementos; elementos
+           | cadenas : instruccion
+           | numero : instruccion"
 
+  cadenas="$CADENA"
 
-###########################################################################################################################################
-  rule 'elementos:
-             elementos  PUNTOYCOMA elementos
-           | cadenas DOSPUNTOS instruccion
-           | numero DOSPUNTOS instruccion' do |elemen,elcanum,puntos,ins|
-    elemen.value = elecanum.value
-  end
+ cadenas="cadenas , cadenas"
 
-############################################################################################################################################
-  rule 'cadenas:
-           CADENA' do |cade, cad|
-    cade.value = cad.value
-  end
-
-############################################################################################################################################
- rule 'cadenas:
-             cadenas COMA cadenas' do |cade,cad,coma,caden|
-    cade.value = cad.value
-  end
-
-############################################################################################################################################
-  rule 'expresionlogica:
+  expresionlogica="
          expresion OPERADORLOGICO expresion
-        |expresion IGUAL expresion' do |explogi,expre,opelog,exp|
-    explogi.value = expre.value
-  end
+        |expresion = expresion"
 
-#######################################################################################################################################
+  salida ="identificadores
+          | $CADENA
+          | $NUMBERINT
+          | $NUMBERFLOAT
+          | expresion"
+ salida ="salida , salida"
 
-  rule 'salida :
-            identificadores
-          | CADENA
-          | NUMBERINT
-          | NUMBERFLOAT
-          | expresion' do |salir, ins|
-    salir.value = ins.value
-  end
-#######################################################################################################################################
-rule 'salida :
-            salida COMA salida' do |salir,sal,coma,sali|
-    salir.value = sal.value
-  end
+  identificadores ="
+        $IDENTIFICADOR"
 
-#######################################################################################################################################
+  identificadores ="identificadores , identificadores
+          | identificadores . identificadores"
 
-  rule 'identificadores :
-        IDENTIFICADOR' do |blo, ins|
-    blo.value = ins.value
-  end
+  instruccion ="expresion
+            | instruccion"
 
-  #######################################################################################################################################
+  instruccion ="$IDENTIFICADOR ASIGNACION rango
+            | $IDENTIFICADOR ASIGNACION $IDENTIFICADOR
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO
+            | identificadores ASIGNACION $INDICADORDETIPO
+            | $IDENTIFICADOR ASIGNACION expresion"
 
-  rule 'identificadores :
-            identificadores COMA identificadores
-          | identificadores PUNTO identificadores' do |blo, ident,copu,identi|
-    blo.value = ident.value
-  end
-
-#######################################################################################################################################
-  rule 'instruccion :
-              expresion
-            | instruccion' do |blo,decla|
-
-    blo.value = decla.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
-
-#######################################################################################################################################
-  rule 'instruccion :
-              IDENTIFICADOR ASIGNACION rango
-            | IDENTIFICADOR ASIGNACION IDENTIFICADOR
-            | IDENTIFICADOR ASIGNACION INDICADORDETIPO
-            | identificadores ASIGNACION INDICADORDETIPO
-            | IDENTIFICADOR ASIGNACION expresion' do |blo,ide,asig,riex|
-
-    blo.value = ide.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
-
-#######################################################################################################################################
-rule 'instruccion :
-              IDENTIFICADOR PARENTESISA salida PARENTESISC
+instruccion ="$IDENTIFICADOR PARENTESISA salida PARENTESISC
             | WRITE PARENTESISA salida PARENTESISC
-            | READ PARENTESISA identificadores PARENTESISC' do |blo,idewr,pa,saliden,pc|
+            | READ PARENTESISA identificadores PARENTESISC"
 
-    blo.value = idewr.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
-#######################################################################################################################################
-  rule 'instruccion :
-              IDENTIFICADOR ASIGNACION RECORD secuenciaenun END
-            | IDENTIFICADOR ASIGNACION FILE OF IDENTIFICADOR
-            | IDENTIFICADOR ASIGNACION FILE OF INDICADORDETIPO' do |blo,ide,asig,recfi,sec,fin|
+  instruccion ="$IDENTIFICADOR ASIGNACION RECORD secuenciaenun END
+            | $IDENTIFICADOR ASIGNACION FILE OF $IDENTIFICADOR
+            | $IDENTIFICADOR ASIGNACION FILE OF $INDICADORDETIPO"
 
-    blo.value = ide.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
+  instruccion ="
+          $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC"
+  instruccion ="$IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC OF $IDENTIFICADOR
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $IDENTIFICADOR
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA $NUMBERINT CORCHETEC OF $INDICADORDETIPO
+            | $IDENTIFICADOR ASIGNACION $INDICADORDETIPO CORCHETEA rango CORCHETEC OF $INDICADORDETIPO"
 
-#######################################################################################################################################
-  rule 'instruccion :
-          IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC' do |blo, ide, asig, inditi,ca,num,cc|
+  expresion ="
+      termino"
 
-    blo.value = ide.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
-#######################################################################################################################################
-  rule 'instruccion :
-              IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC OF IDENTIFICADOR
-            | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA rango CORCHETEC OF IDENTIFICADOR
-            | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA NUMBERINT CORCHETEC OF INDICADORDETIPO
-            | IDENTIFICADOR ASIGNACION INDICADORDETIPO CORCHETEA rango CORCHETEC OF INDICADORDETIPO' do |blo,iden,asig,indtip,ca,numran,cc,of,ide|
 
-    blo.value = iden.value
-    # $tabla[blo.value]= u.value
-    #  puts("\n\n")
-    #  puts("aqui")
-    #  puts(tabla)
-    #  puts("\n\n")
-    $salida+=" #{blo.value} "
-  end
-
-#######################################################################################################################################
-
-  rule 'expresion :
-      termino' do |ex, termino|
-    ex.value = termino.value
-    #$salida+="\n   #{e1.value} "
-  end
-  #######################################################################################################################################
-
-  rule 'expresion :
+  expresion ="
       termino MAS expresion
     | termino MENOS expresion
-    | PARENTESISA termino PARENTESISC' do |ex, ter, masomenos,ex2|
-    ex.value = ter.value
-    #$salida+="\n   #{e1.value} "
-  end
+    | PARENTESISA termino PARENTESISC"
 
-#######################################################################################################################################
-  rule 'expresion :
+  expresion ="
       PARENTESISA termino MAS expresion  PARENTESISC
-    | PARENTESISA termino MENOS expresion PARENTESISC' do |ex,pa,ter,mas,exp,pc|
-    ex.value = pa.value
-    #$salida+="\n   #{e1.value} "
-  end
+    | PARENTESISA termino MENOS expresion PARENTESISC"
 
-#####################################################################################################################################
-  rule 'termino :
-              factor' do |termi,fac,|
-    #ex.value = e1.value
-  end
+  termino ="factor"
 
-#####################################################################################################################################
-  rule 'termino :
-              PARENTESISA factor PARENTESISC
+  termino ="PARENTESISA factor PARENTESISC
             | termino TIMES factor
-            | termino DIV factor' do |termi,pat,factidi,pafa|
-    #ex.value = e1.value
-  end
+            | termino DIV factor"
 
-#####################################################################################################################################
-  rule 'termino :
-              PARENTESISA termino TIMES factor PARENTESISC
+  termino ="PARENTESISA termino TIMES factor PARENTESISC
             | PARENTESISA termino DIV factor PARENTESISC
-            |  PARENTESISA termino MOD factor PARENTESISC'do |termi, pa, ter,tidi,fac,pc|
-    #ex.value = e1.value
-  end
+            |  PARENTESISA termino MOD factor PARENTESISC"
 
-
-#######################################################################################################################################
-  rule 'factor :
-                 numero
-               | IDENTIFICADOR' do |fact, numid|
-    fact.value = numid.value
-  end
-
-########################################################################################################################################
-  rule 'numero :
-             NUMBERINT
-           | NUMBERFLOAT' do |numer,num|
-
-    numer.value = num.value
-    #$tabla[ex.value]= n.value
-  end
-
-end
+  factor ="numero
+               | $IDENTIFICADOR"
+  numero ="$NUMBERINT
+           | $NUMBERFLOAT"
 
 #------------------------------------------------------
 
 =#
+
+
+function elemento_posision(ele)
+  posision=0
+
+end
+
+function posision_elemento()
+
+end
+
+function analizador(cadena)
+  println("$cadena")
+
+
+end
 
 println("""
             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ COMPILADOR DEL LENGUAJE PASCAL v 0.1 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓             ALUMNOS:              ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+            ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓             ALUMNOS               ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
             ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
             ▓▓▓▓▓▓                  ACEVEDO MALDONADO JOSUE                              ▓▓▓▓▓▓
             ▓▓▓▓▓▓                  MORALES MARTINEZ MARIA                               ▓▓▓▓▓▓
@@ -717,15 +381,12 @@ println("""
 println("Url del archivo .pas:")
 url = readline(STDIN)
 url= url[1:end-2] #quitamos los simbolos /r y /n
-
-println("\t\tANALIZADOR LEXICOGRAFICO")
 cadenaunica= leer(url)
 p,v1,v2 = analizacomentarios(cadenaunica)
 
-#print(p,v1,v2)
-
+if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
+#---------------------------------------------------------------------------------------------------------
 #aqui se eliminan los comentarios
-if p==1
   for i= 1:length(v2)
     veces=0
     for j= length(v1):-1:1
@@ -736,25 +397,36 @@ if p==1
       end 
     end 
   end
-
   cadenaunica= replace(cadenaunica,"@","")
-end
   cadenaunica= replace(cadenaunica,r"//.+","")
-  println(cadenaunica)
+#---------------------------------------------------------------------------------------------------------
+  cadenaunica= replace(cadenaunica,r"\t","")
+  cadenaunica= uppercase(cadenaunica) #se pasa el programa a mayusculas
+#EXTRACION DE LINEAS--------------------------------------------------------------------------------------
+  lineas= split(cadenaunica,"\r\n") #se separa el programa en lineas
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
-  cadenaunica= uppercase(cadenaunica)
+
+  println("\tANALIZADOR LEXICO")
+
+  for i = 1:length(lineas)
+    lineas[i]= replace(lineas[i],r"\n|\r","")
+    print("$i:")
+
+    if lineas[i]!=""
+      analizador(lineas[i])
+    else
+      println("")
+    end
+
+  end
   println(cadenaunica)
+  
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
-
-identificador = "(\\w(\\w|_)*|_(\\w|_)*)"
-INDICADORDETIPO="(INTEGER|BYTE|SHORTINT|WORD|LONGINT|REAL|CHAR|STRING|BOOLEAN|TEXT|ARRAY)"
-
-declaravariable="VAR($identificador|,)+:$INDICADORDETIPO;"
-
- SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
-
-print(" estas son las variables: \n") 
+ #=SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
+print("estas son las variables: \n") 
 for i= SIMBOL
   t = replace(i,r"VAR","")
   print("\t$t\n")
+end=#
+
 end
