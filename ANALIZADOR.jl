@@ -96,6 +96,16 @@ operador=[1 "="
 
 asignacion=[1 ":="]
 
+delimitador=[1 "("
+             2 ")" 
+             3 "["
+             4 "]" ]
+simbolo=[ 1 "^" 
+          2 ";"  
+          3 ":"
+          4 ","
+          5 "."]
+
 palabra_reservada=[1 "PROGRAM" 
                    2 "READ" 
                    3 "CLOSE" 
@@ -142,16 +152,7 @@ palabra_reservada=[1 "PROGRAM"
                    44 "VAR"
                    45 "WHILE"
                    46 "FUNCTION"
-                   47 "NEW"
-                   48 "^" 
-                   49 ";"  
-                   50 ":"
-                   51 ","
-                   52 "("
-                   53 ")" 
-                   54 "["
-                   55 "]"
-                   56 "."]
+                   47 "NEW"]
 
 operador_logico=[1 "¬="
                  2 "<>"
@@ -357,6 +358,18 @@ function elemento_posision(ele)
     end
   end
 
+  for i=1:size(delimitador,1)
+    if delimitador[i,2]==ele
+      return "delimitador", i
+    end
+  end
+
+  for i=1:size(simbolo,1)
+    if simbolo[i,2]==ele
+      return "simbolo", i
+    end
+  end
+
   for i=1:size(asignacion,1)
     if asignacion[i,2]==ele
       return "asignacion", i
@@ -435,7 +448,7 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   lineas= split(cadenaunica,"\r\n") #se separa el programa en lineas
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
 
-  println("\tANALIZADOR LEXICO")
+  println("\tANALIZADOR LEXICO\n")
 
   for i = 1:length(lineas)
     lineas[i]= replace(lineas[i],r"\n|\r","")
@@ -448,11 +461,11 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
     end
 
   end
-  println(cadenaunica)
+  println("\n",cadenaunica)
 
 #---------ubicando los elementos(tokens)----------------
-  println("ubicando los elementos(tokens)")
-  ti, pos= elemento_posision("+")
+  println("\nUbicando los elementos(tokens)")
+  ti, pos= elemento_posision(".")
   println("($ti,$pos)=>",posision_elemento(ti,pos))
 
   
