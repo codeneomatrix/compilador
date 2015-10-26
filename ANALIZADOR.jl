@@ -228,7 +228,7 @@ on_error = "$errorlex: CARACTER ILEGAL"
                   | $IDENTIFICADOR ASIGNACION $CADENA "
 
   declarafunciones ="$IDENTIFICADOR \\( declaravariables \\) : $INDICADORDETIPO bloque "
-  
+
   declaraprocemientos ="$IDENTIFICADOR \\( declaravariables \\) bloque
                         |$IDENTIFICADOR \\( VAR declaravariables \\) bloque "
 
@@ -389,7 +389,7 @@ println("""
 
 println("Url del archivo .pas:")
 url = readline(STDIN)
-url= url[1:end-2] #quitamos los simbolos /r y /n
+OS_NAME==:Windows ? url= url[1:end-2] : url= url[1:end-1]  #quitamos los simbolos /r y /n
 cadenaunica= leer(url)
 p,v1,v2 = analizacomentarios(cadenaunica)
 
@@ -412,7 +412,7 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   cadenaunica= replace(cadenaunica,r"\t","")
   cadenaunica= uppercase(cadenaunica) #se pasa el programa a mayusculas
 #EXTRACION DE LINEAS--------------------------------------------------------------------------------------
-  lineas= split(cadenaunica,"\r\n") #se separa el programa en lineas
+  OS_NAME==:Windows? lineas= split(cadenaunica,"\r\n") : lineas= split(cadenaunica,"\n")#se separa el programa en lineas
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
 
   println("\tANALIZADOR LEXICO\n")
