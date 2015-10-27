@@ -151,7 +151,8 @@ palabra_reservada=[1 "PROGRAM"
                    44 "VAR"
                    45 "WHILE"
                    46 "FUNCTION"
-                   47 "NEW"]
+                   47 "NEW"
+                   48 "WRITELN"]
 
 operador_logico=[1 "¬="
                  2 "<>"
@@ -362,7 +363,7 @@ function elemento_posision(ele)
       return "indicador_tipo", i
     end
   end
-
+  return "sinident", 0
 end
 
 function posision_elemento(nombret,pos)
@@ -370,8 +371,26 @@ function posision_elemento(nombret,pos)
 end
 
 function analizador(cadena)
-  println("$cadena")
-  
+  println("$cadena\n")
+  toks = split(cadena,r"\s")
+  for t=toks
+      if t!=""
+        ti, pos= elemento_posision(t)
+        if ti=="sinident"
+          if ismatch(Regex(IDENTIFICADOR),t)
+            println("\t(Identificador,#)=>$t")
+          elseif ismatch(Regex(CADENA),t)
+            println("\t(cadena,#)=>$t")
+          else
+            println("\t \033[1;31m $errorlex $on_error")
+          end
+        else
+          println("\t($ti,$pos)=>$t")
+        end
+
+      end
+  end
+
 end
 
 println("""
@@ -420,17 +439,17 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   for i = 1:length(lineas)
     lineas[i]= replace(lineas[i],r"\n|\r","")
     if lineas[i]!=""
-      print("=>")
+      print("\n=>")
       analizador(lineas[i])
     end
   end
 
-  println("\n",cadenaunica)
+  #println("\n",cadenaunica)
 
 #---------ubicando los elementos(tokens)----------------
-  println("\nUbicando los elementos(tokens)")
-  ti, pos= elemento_posision(".")
-  println("($ti,$pos)=>",posision_elemento(ti,pos))
+  #println("\nUbicando los elementos(tokens)")
+  #ti, pos= elemento_posision(".")
+  #println("($ti,$pos)=>",posision_elemento(ti,pos))
 
 #---------------!!!!!!!!!!!!!!!!!!!!!!!!!
  #=SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
