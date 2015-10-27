@@ -1,4 +1,4 @@
-program OtroEjemplo ; 
+program34 OtroEjemplo ; 
 	var a , b : integer ;
 	(*Probando Cambios*)
 	procedure Cambio ( x , y : integer ) 

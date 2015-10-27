@@ -377,12 +377,12 @@ function analizador(cadena)
       if t!=""
         ti, pos= elemento_posision(t)
         if ti=="sinident"
-          if ismatch(Regex(IDENTIFICADOR),t)
+          if ismatch(r"[A-Z]+",t)
             println("\t(Identificador,#)=>$t")
           elseif ismatch(Regex(CADENA),t)
             println("\t(cadena,#)=>$t")
           else
-            println("\t \033[1;31m $errorlex $on_error")
+            println("\t \033[1;31m $on_error $t \033[1;37m")
           end
         else
           println("\t($ti,$pos)=>$t")
