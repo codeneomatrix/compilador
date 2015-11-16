@@ -1,13 +1,13 @@
-program34 OtroEjemplo ; 
-	var a , b : integer ;
+program OtroEjemplo; 
+	var a,b:integer;
 	(*Probando Cambios*)
 	procedure Cambio ( x , y : integer ) 
-		var z : integer ; 
-		var x : real ; 
+		var z:integer; 
+		var x:real; 
 		begin 
-			z : = x ; 
-			x : = y ; 
-			y : = z ; 
+			z:= x ; 
+			x:= y ; 
+			y:= z ; 
 	end ; 
 		(*Probando otros
 		 Cambios*)

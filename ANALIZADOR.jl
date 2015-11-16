@@ -83,29 +83,29 @@ end
 #------------------------------------------------------------------------------------------------------
 #TABLAS DE SIMBOLOS FIJOS
 
-operador=[1 "="    
+op=      [1 "="    
           2 "+"    
           3 "-"    
           4 "*"    
           5 "DIV"  
           6 "MOD" ]
 
-#operador=Dict("="=>1, "+"=>2, "-"=>3, "*"=>4, "DIV"=>5, "MOD"=>6)
-## uso operador["+"]
+#op=Dict("="=>1, "+"=>2, "-"=>3, "*"=>4, "DIV"=>5, "MOD"=>6)
+## uso op["+"]
 
-asignacion=[1 ":="]
+asig=[1 ":="]
 
-delimitador=[1 "("
+delim=[1 "("
              2 ")" 
              3 "["
              4 "]" ]
-simbolo=[ 1 "^" 
+simb=   [ 1 "^" 
           2 ";"  
           3 ":"
           4 ","
           5 "."]
 
-palabra_reservada=[1 "PROGRAM" 
+pal_reser=        [1 "PROGRAM" 
                    2 "READ" 
                    3 "CLOSE" 
                    4 "ABSOLUTE" 
@@ -154,14 +154,14 @@ palabra_reservada=[1 "PROGRAM"
                    47 "NEW"
                    48 "WRITELN"]
 
-operador_logico=[1 "¬="
+op_log=         [1 "¬="
                  2 "<>"
                  3 ">="
                  4 "<="
                  5 "<"
                  6 ">" ]
 
-indicador_tipo=[1 "INTEGER"
+ind_tipo=      [1 "INTEGER"
                 2 "BYTE"
                 3 "SHORTINT"
                 4 "WORD"
@@ -322,45 +322,45 @@ on_error = "$errorlex: CARACTER ILEGAL"
 =#
 
 function elemento_posision(ele)
-  for i=1:size(operador,1)
-    if operador[i,2]==ele
-      return "operador", i
+  for i=1:size(op,1)
+    if op[i,2]==ele
+      return "op", i
     end
   end
 
-  for i=1:size(delimitador,1)
-    if delimitador[i,2]==ele
-      return "delimitador", i
+  for i=1:size(delim,1)
+    if delim[i,2]==ele
+      return "delim", i
     end
   end
 
-  for i=1:size(simbolo,1)
-    if simbolo[i,2]==ele
-      return "simbolo", i
+  for i=1:size(simb,1)
+    if simb[i,2]==ele
+      return "simb", i
     end
   end
 
-  for i=1:size(asignacion,1)
-    if asignacion[i,2]==ele
-      return "asignacion", i
+  for i=1:size(asig,1)
+    if asig[i,2]==ele
+      return "asig", i
     end
   end
 
-  for i=1:size(palabra_reservada,1)
-    if palabra_reservada[i,2]==ele
-      return "palabra_reservada", i
+  for i=1:size(pal_reser,1)
+    if pal_reser[i,2]==ele
+      return "pal_reser", i
     end
   end
 
-  for i=1:size(operador_logico,1)
-    if operador_logico[i,2]==ele
-      return "operador_logico", i
+  for i=1:size(op_log,1)
+    if op_log[i,2]==ele
+      return "op_log", i
     end
   end
 
-  for i=1:size(indicador_tipo,1)
-    if indicador_tipo[i,2]==ele
-      return "indicador_tipo", i
+  for i=1:size(ind_tipo,1)
+    if ind_tipo[i,2]==ele
+      return "ind_tipo", i
     end
   end
   return "sinident", 0
@@ -372,24 +372,41 @@ end
 
 function analizador(cadena)
   println("$cadena\n")
-  toks = split(cadena,r"\s")
-  for t=toks
+
+ t = replace(cadena,r"\s","")
+  
       if t!=""
-        ti, pos= elemento_posision(t)
-        if ti=="sinident"
-          if ismatch(r"[A-Z]+",t)
-            println("\t(Identificador,#)=>$t")
-          elseif ismatch(Regex(CADENA),t)
-            println("\t(cadena,#)=>$t")
-          else
-            println("\t \033[1;31m $on_error $t \033[1;37m")
+        #ti, pos= elemento_posision(t)
+        #if ti=="sinident"
+
+         # if ismatch(r"[A-Z]+",t)
+          #  println("\t <Id,#>")
+          #end
+          
+          vars = matchall(Regex(declaravariable), t) 
+          for i= vars
+            ti, pos= elemento_posision("VAR")
+            println("\t <$ti,$pos>")
+            i = replace(i,r"VAR","")
+            i = replace(i,r";","")
+            print("\t$i\n")
           end
-        else
-          println("\t($ti,$pos)=>$t")
-        end
+          SIMBOL = matchall(Regex(r";"), t) 
+          for i= SIMBOL
+            ti, pos= elemento_posision(i)
+            println("\t <$ti,$pos>")
+          end
+          #if ismatch(Regex(CADENA),t)
+          #  println("\t <cadena,#>")
+          #else
+           # println("\t \033[1;31m $on_error $t \033[1;37m")
+          #end
+        #else
+         # println("\t <$ti,$pos>")
+        #end
 
       end
-  end
+
 
 end
 
@@ -435,7 +452,7 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
 
   println("\tANALIZADOR LEXICO\n")
-
+   
   for i = 1:length(lineas)
     lineas[i]= replace(lineas[i],r"\n|\r","")
     if lineas[i]!=""
