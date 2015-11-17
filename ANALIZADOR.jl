@@ -95,7 +95,7 @@ op=      [1 "="
 
 asig=[1 ":="]
 
-delim=[1 "("
+delim=      [1 "("
              2 ")" 
              3 "["
              4 "]" ]
@@ -103,10 +103,11 @@ simb=   [ 1 "^"
           2 ";"  
           3 ":"
           4 ","
-          5 "."]
+          5 "."
+          6 ".."]
 
 pal_reser=        [1 "PROGRAM" 
-                   2 "READ" 
+                   2 "READLN" 
                    3 "CLOSE" 
                    4 "ABSOLUTE" 
                    5 "BEGIN" 
@@ -121,7 +122,7 @@ pal_reser=        [1 "PROGRAM"
                    14 "ELSE" 
                    15 "END" 
                    16 "NIL" 
-                   17 "WRITE" 
+                   17 "WRITELN" 
                    18 "REPEAT" 
                    19 "UNIT" 
                    20 "USES" 
@@ -135,31 +136,30 @@ pal_reser=        [1 "PROGRAM"
                    28 "IMPLEMENTATION" 
                    29 "INLINE" 
                    30 "INTERRUPT" 
-                   31 "OF" 
+                   31 "EOF" 
                    32 "PACKED" 
                    33 "PROCEDURE" 
                    34 "RECORD" 
-                   35 "PROCEDURE" 
-                   36 "PROCEDURE" 
-                   37 "PROCEDURE" 
-                   38 "PROCEDURE" 
-                   39 "SET"
-                   40 "SHR"
-                   41 "THEN"
-                   42 "TYPE"
-                   43 "UNTIL"
-                   44 "VAR"
-                   45 "WHILE"
-                   46 "FUNCTION"
-                   47 "NEW"
-                   48 "WRITELN"]
+                   35 "SET"
+                   36 "SHR"
+                   37 "THEN"
+                   38 "TYPE"
+                   39 "UNTIL"
+                   40 "VAR"
+                   41 "WHILE"
+                   42 "FUNCTION"
+                   43 "NEW"
+                   44 "WRITE"
+                   45 "READ"
+                   46 "OF"]
 
 op_log=         [1 "¬="
                  2 "<>"
                  3 ">="
                  4 "<="
                  5 "<"
-                 6 ">" ]
+                 6 ">" 
+                 7 "NOT"]
 
 ind_tipo=      [1 "INTEGER"
                 2 "BYTE"
@@ -173,10 +173,14 @@ ind_tipo=      [1 "INTEGER"
                 10 "TEXT"
                 11 "ARRAY"]
 #------------------------------------------------------------------------------------------------------
+#TABLA DE SIMBOLOS VARIABLES
+Id=[]
 
+#------------------------------------------------------------------------------------------------------
 IDENTIFICADOR = "(\\w(\\w|_)*|_(\\w|_)*)"
 INDICADORDETIPO="(INTEGER|BYTE|SHORTINT|WORD|LONGINT|REAL|CHAR|STRING|BOOLEAN|TEXT|ARRAY)"
-declaravariable="VAR($IDENTIFICADOR|,)+:$INDICADORDETIPO;"
+declaravariable="VAR(($IDENTIFICADOR|,)+:$INDICADORDETIPO;)+"
+declaravariable2="(($IDENTIFICADOR|,)+:$INDICADORDETIPO)+"
 NUMBERFLOAT= "(\\d+\\.\\d+)"
 NUMBERINT="(\\d+)"
 CADENA = "('\\w(\\w|\\s|-|!|,|\\.|\\(|\\)|@|#|\$|%|&)*')"
@@ -320,6 +324,13 @@ on_error = "$errorlex: CARACTER ILEGAL"
   numero ="$NUMBERINT
            | $NUMBERFLOAT"
 =#
+function settabla(ell,tipo)
+  if ell!="" && tipo!=""
+    println("\t\t\t$ell es de tipo $tipo")
+    push!(Id,ell)
+  end
+end
+
 
 function elemento_posision(ele)
   for i=1:size(op,1)
@@ -358,6 +369,12 @@ function elemento_posision(ele)
     end
   end
 
+  for i=1:length(Id)
+    if Id[i]==ele
+      return "Id", i
+    end
+  end
+
   for i=1:size(ind_tipo,1)
     if ind_tipo[i,2]==ele
       return "ind_tipo", i
@@ -376,35 +393,84 @@ function analizador(cadena)
  t = replace(cadena,r"\s","")
   
       if t!=""
-        #ti, pos= elemento_posision(t)
-        #if ti=="sinident"
 
-         # if ismatch(r"[A-Z]+",t)
-          #  println("\t <Id,#>")
-          #end
-          
+          SIMBOL = matchall(Regex(CADENA), t) 
+          for i= SIMBOL
+            t=replace(t,i," ")
+            ti, pos= elemento_posision(i)
+            println("\t $i =>> <cadena,#>")
+          end
+
+#---------------------------------------------          
+          #vars2 = matchall(Regex(declaravariable2), t) 
+          #println(vars2) #EN LA POSISION 1 EXISTIRA UN VAR, HAY QUE SALTARLO
+
+
           vars = matchall(Regex(declaravariable), t) 
           for i= vars
             ti, pos= elemento_posision("VAR")
-            println("\t <$ti,$pos>")
+            println("\t VAR =>> <$ti,$pos>")
             i = replace(i,r"VAR","")
-            i = replace(i,r";","")
-            print("\t$i\n")
-          end
-          SIMBOL = matchall(Regex(r";"), t) 
-          for i= SIMBOL
-            ti, pos= elemento_posision(i)
-            println("\t <$ti,$pos>")
-          end
-          #if ismatch(Regex(CADENA),t)
-          #  println("\t <cadena,#>")
-          #else
-           # println("\t \033[1;31m $on_error $t \033[1;37m")
-          #end
-        #else
-         # println("\t <$ti,$pos>")
-        #end
+            elementos= split(i,";")
+            for ce = elementos
+              cde= split(ce,":")
+              tipoo= cde[end]
+              vaa= split(cde[1],",")
+              for s= vaa
+                  settabla(s,tipoo)
+              end
+            end
 
+          end
+
+#---------------------------------------------
+
+
+          
+            SIMBOL = matchall(Regex(INDICADORDETIPO), t) 
+            for i= SIMBOL
+              t=replace(t,i," ")
+              ti, pos= elemento_posision(i)
+              println("\t $i =>> <$ti,$pos>")
+            end
+         
+
+          for i=1:size(pal_reser,1)
+            PA= pal_reser[i,2]
+            SIMBOL = matchall(Regex(PA), t) 
+            for i= SIMBOL
+              t=replace(t,i," ")
+              ti, pos= elemento_posision(i)
+              println("\t $i =>> <$ti,$pos>")
+            end
+          end
+
+          for i=["\\(","\\)","\\[","\\]","¬=","<>",">=","<=","<","\\.\\.","NOT",">",":=",",",":","=","\\.",";"]
+            SIMBOL = matchall(Regex(i), t) 
+            for i= SIMBOL
+              t=replace(t,i," ")
+              ti, pos= elemento_posision(i)
+              println("\t $i =>> <$ti,$pos>")
+            end
+          end
+
+
+          id = matchall(Regex(IDENTIFICADOR), t) 
+          for i= id
+            t=replace(t,i," ")
+            ti, pos= elemento_posision(i)
+            if ti=="sinident"
+              settabla(i,"NO SE")
+            end
+            ti, pos= elemento_posision(i)
+            println("\t$i =>> <$ti,$pos>")
+          end
+
+          
+          t=replace(t,r"\s","")
+          if length(t)!=0
+            println("\t \033[1;31m $on_error $t \033[1;37m")
+          end
       end
 
 
@@ -463,16 +529,5 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
 
   #println("\n",cadenaunica)
 
-#---------ubicando los elementos(tokens)----------------
-  #println("\nUbicando los elementos(tokens)")
-  #ti, pos= elemento_posision(".")
-  #println("($ti,$pos)=>",posision_elemento(ti,pos))
-
-#---------------!!!!!!!!!!!!!!!!!!!!!!!!!
- #=SIMBOL = matchall(Regex(declaravariable), cadenaunica) 
-print("estas son las variables: \n") 
-for i= SIMBOL
-  t = replace(i,r"VAR","")
-  print("\t$t\n")
-end=#
+   print("\n\tTABLA DE SIMBOLOS:\n\t",Id)
 end
