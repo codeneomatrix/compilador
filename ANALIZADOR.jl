@@ -406,11 +406,13 @@ function analizador(cadena)
           #println(vars2) #EN LA POSISION 1 EXISTIRA UN VAR, HAY QUE SALTARLO
 
 
-          vars = matchall(Regex(declaravariable), t) 
+          vars = matchall(Regex(declaravariable2), t) 
           for i= vars
-            ti, pos= elemento_posision("VAR")
-            println("\t VAR =>> <$ti,$pos>")
-            i = replace(i,r"VAR","")
+            if (contains(i,"VAR") == true)
+              ti, pos= elemento_posision("VAR")
+              println("\t VAR =>> <$ti,$pos>")
+              i = replace(i,r"VAR","")
+            end
             elementos= split(i,";")
             for ce = elementos
               cde= split(ce,":")
