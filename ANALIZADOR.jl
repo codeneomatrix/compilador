@@ -1,3 +1,50 @@
+tbblobal=1
+#=
+type Tipo
+nombre::AbstractString
+scopeif::Scope
+function getname()
+nombre
+end
+function setname(nom)
+nombre=nom
+end
+function getscope()
+scopeif
+end
+function setscope(sco)
+scopeif=sco
+end
+function getsize()
+1
+end
+
+end
+
+
+type Symbol
+name::AbstractString
+tipo::Type
+scopeif:: Scope
+
+function getname()
+name
+end
+
+function setname(na)
+name=na
+end
+end
+
+type Scope 
+nombre:: AbstractString
+id:: Int64
+level:: Int64
+table :: Symbol
+tabl:: Tipo
+end =#
+
+
 #ARBOL 1er intento
 #=type nodo{T}
     izq::T
@@ -174,7 +221,7 @@ ind_tipo=      [1 "INTEGER"
                 11 "ARRAY"]
 #------------------------------------------------------------------------------------------------------
 #TABLA DE SIMBOLOS VARIABLES
-Id=[]
+Id=["" for i=1:12, j=1:6]
 
 #------------------------------------------------------------------------------------------------------
 IDENTIFICADOR = "(\\w(\\w|_)*|_(\\w|_)*)"
@@ -325,12 +372,22 @@ on_error = "$errorlex: CARACTER ILEGAL"
            | $NUMBERFLOAT"
 =#
 function settabla(ell,tipo)
+  global tbblobal
   if ell!="" && tipo!=""
     println("\t\t\t$ell es de tipo $tipo")
-    push!(Id,ell)
+    Id[tbblobal,1]=ell
+    Id[tbblobal,2]=tipo
+    tbblobal=tbblobal+1
   end
 end
 
+function imprimirtabla()
+for j= 1:12
+  if Id[j,1]!=""
+    println("\t|",Id[j,1],"\033[100D\033[22C |",Id[j,2])
+  end
+end
+end
 
 function elemento_posision(ele)
   for i=1:size(op,1)
@@ -369,8 +426,8 @@ function elemento_posision(ele)
     end
   end
 
-  for i=1:length(Id)
-    if Id[i]==ele
+  for i=1:size(Id,1)
+    if Id[i,1]==ele
       return "Id", i
     end
   end
@@ -389,7 +446,7 @@ end
 
 function analizador(cadena)
   println("$cadena\n")
-
+  
  t = replace(cadena,r"\s","")
   
       if t!=""
@@ -402,16 +459,13 @@ function analizador(cadena)
           end
 
 #---------------------------------------------          
-          #vars2 = matchall(Regex(declaravariable2), t) 
-          #println(vars2) #EN LA POSISION 1 EXISTIRA UN VAR, HAY QUE SALTARLO
-
-
           vars = matchall(Regex(declaravariable2), t) 
           for i= vars
             if (contains(i,"VAR") == true)
               ti, pos= elemento_posision("VAR")
               println("\t VAR =>> <$ti,$pos>")
               i = replace(i,r"VAR","")
+              t = replace(t,r"VAR","")
             end
             elementos= split(i,";")
             for ce = elementos
@@ -424,18 +478,13 @@ function analizador(cadena)
             end
 
           end
-
 #---------------------------------------------
-
-
-          
             SIMBOL = matchall(Regex(INDICADORDETIPO), t) 
             for i= SIMBOL
               t=replace(t,i," ")
               ti, pos= elemento_posision(i)
               println("\t $i =>> <$ti,$pos>")
             end
-         
 
           for i=1:size(pal_reser,1)
             PA= pal_reser[i,2]
@@ -468,13 +517,11 @@ function analizador(cadena)
             println("\t$i =>> <$ti,$pos>")
           end
 
-          
           t=replace(t,r"\s","")
           if length(t)!=0
             println("\t \033[1;31m $on_error $t \033[1;37m")
           end
       end
-
 
 end
 
@@ -520,7 +567,7 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
   cadenaunica= replace(cadenaunica,r"\n|\r|\t|\s","")
 
   println("\tANALIZADOR LEXICO\n")
-   
+
   for i = 1:length(lineas)
     lineas[i]= replace(lineas[i],r"\n|\r","")
     if lineas[i]!=""
@@ -531,5 +578,6 @@ if p==1  #si el analisis fue exitoso es 1, sino ya no hace nada
 
   #println("\n",cadenaunica)
 
-   print("\n\tTABLA DE SIMBOLOS:\n\t",Id)
+   print("\n\tTABLA DE SIMBOLOS:\n\t-------------------------------\n\t|Simbolo \033[100D\033[22C |Tipo\n\t-------------------------------\n")
+   imprimirtabla()
 end
